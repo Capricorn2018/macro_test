@@ -11,7 +11,7 @@ function [nav,ret] = load_assets(filename,num_days,direction)
     [~,Locb] = ismember(reb,raw.date);
 
     nav = raw(Locb,:);
-    ret = array2table(nan(size(nav)),'VariableNames',nav.Properties.VariableNames);
+    ret = array2table(nan(size(nav)),'VariableNames',nav.Properties.VariableNames)  ;
     ret.date = nav.date;
 
     for i = 1:length(reb)
