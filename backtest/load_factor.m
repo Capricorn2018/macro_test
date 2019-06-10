@@ -1,13 +1,11 @@
-function result = load_factor(filename,num_days,direction)
+function result = load_factor(filename,reb)
 % 此处显示有关此函数的摘要
-%   此处显示详细说明
+%   reb: rebalance_dates, 这里就是用load_assets里面的date就行
     
     raw = readtable(filename);
     raw.Properties.VariableNames = {'date','factor'};
     raw.date = datenum(raw.date);
-    
-    reb = find_month_dates(num_days,raw.date,direction);
-    
+        
     [~,Locb] = ismember(reb,raw.date);
     
     result = raw(Locb,:);
