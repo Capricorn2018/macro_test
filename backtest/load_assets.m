@@ -17,7 +17,7 @@ function [nav,ret] = load_assets(filename,num_days,direction)
     for i = 1:length(reb)
 
         if(i>1)
-            ret(i,2:end) = table2array(raw(Locb(i),2:end))./table2array(raw(Locb(i-1),2:end)) - 1;
+            ret(i,2:end) = array2table(table2array(raw(Locb(i),2:end))./table2array(raw(Locb(i-1),2:end)) - 1);
         else
             ret(i,2:end)= array2table(nan(1,size(ret,2)-1));
         end
