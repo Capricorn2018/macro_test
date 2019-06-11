@@ -1,6 +1,5 @@
 function result = load_factor(filename,num_days,direction)
-% 此处显示有关此函数的摘要
-%   此处显示详细说明
+% 从Excel中读入某个因子数据，取某个月的固定交易日，并计算区间均值
     
     raw = readtable(filename);
     raw.Properties.VariableNames = {'date','factor'};
