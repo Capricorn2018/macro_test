@@ -10,7 +10,7 @@ function result = load_factor(filename,reb,factor_name)
     [~,Locb] = ismember(reb,raw.date);
     
     result = raw(Locb,:);
-    eval(['result.mean_',factor_name,' = zeros(height(result),1);'];
+    eval(['result.mean_',factor_name,' = zeros(height(result),1);']);
     
     for i = 1:length(reb)
         
