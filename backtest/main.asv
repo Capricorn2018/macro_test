@@ -6,11 +6,6 @@ factor = load_factor(factor_file,reb,'sprd51');
 
 tbl = merge_xy(factor, ret);
 
-factor_file = 'D:/Projects/macro_test/Í¹¶È.xls';
-factor = load_factor(factor_file,reb,'curv1510');
-
-tbl = merge_xy(factor, tbl);
-
 r1 = tbl.CBA02521;
 r5 = tbl.CBA02531;
 r10 = tbl.CBA02551;
@@ -18,9 +13,7 @@ r10 = tbl.CBA02551;
 mom1 = r10 - r1;
 mom1 = [NaN;mom1(1:end-1)];
 
-sprd51 = tbl.mean_sprd51;
-
-curv1510 = tbl.mean_curv1510;
+sprd1 = tbl.mean_sprd51;
 
 
 
