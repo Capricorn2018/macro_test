@@ -21,10 +21,3 @@ mom1 = [NaN;mom1(1:end-1)];
 sprd51 = tbl.mean_sprd51;
 
 curv1510 = tbl.mean_curv1510;
-
-
-
-
-
-
-
