@@ -71,8 +71,8 @@ alpha_yr = zeros(length(yr),1);
 r_yr = zeros(length(yr),1);
 
 for i=1:length(yr)
-	alpha_yr(i) = prod(1+alpha(year(stats.date)==yr(i))) - 1;
-	r_yr(i) = prod(1+r_all(year(stats.date)==yr(i))) - 1;
+	alpha_yr(i) = prod(1+alpha(year(tbl.date)==yr(i))) - 1;
+	r_yr(i) = prod(1+r_all(year(tbl.date)==yr(i))) - 1;
 end
 	
 bar(alpha_yr);
