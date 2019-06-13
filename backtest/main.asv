@@ -49,30 +49,14 @@ r_sprd(signal==1) = r_long(signal==1);
 r_sprd(signal~=1) = r1(signal~=1);
 
 r_mom = zeros(length(r1),1);
-r_mom(mom1>0) = r_long(mom1>0);
+r_mom(mom1>0) = r10(mom1>0);
 r_mom(mom1<=0) = r1(mom1<=0);
 
-r_all = r_mom/4 + r_sprd/4 + r1/2;
-
-nav = [1;cumprod(1+r_all)];
+nav = [1;cumprod(1+r_mom/2+r_sprd/2)];
 nav1 = [1;cumprod(1+r1)];
-nav_long = [1;cumprod(1+r_long)];
+nav10 = [1;cumprod(1+r10)];
 
-hold on;
 plot(nav);
-plot(nav1);
-plot(nav_long);
-hold off;
+hold on;
 
-alpha = r_all - tbl.CBA02521;
 
-yr = 2005:2019;
-alpha_yr = zeros(length(yr),1);
-r_yr = zeros(length(yr),1);
-
-for i=1:length(yr)
-	alpha_yr(i) = prod(1+alpha(year(stats.date)==yr(i))) - 1;
-	r_yr(i) = prod(1+r_all(year(stats.date)==yr(i))) - 1;
-end
-	
-bar(alpha_yr);

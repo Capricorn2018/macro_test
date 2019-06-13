@@ -1,6 +1,4 @@
 function [nav,ret,reb] = load_assets(filename,num_days,direction)
-%LOAD_ASSETS 此处显示有关此函数的摘要
-%   此处显示详细说明
 
      raw = readtable(filename);
      
@@ -14,15 +12,22 @@ function [nav,ret,reb] = load_assets(filename,num_days,direction)
     nav = raw(Locb,:);
     ret = array2table(nan(size(nav)),'VariableNames',nav.Properties.VariableNames);
     ret.date = nav.date;
+    
+    ret_lag3d = ret;
+    ret_lag3d.Properties.VariableNames = ['date',strcat(nav.Properties.VariableNames(2:end),'_lag3d')];
 
     for i = 1:length(reb)
 
         if(i<length(reb))
-            ret(i,2:end) = array2table(table2array(raw(Locb(i+1),2:end))./table2array(raw(Locb(i)+3,2:end)) - 1);
+            ret(i,2:end) = array2table(table2array(raw(Locb(i+1),2:end))./table2array(raw(Locb(i),2:end)) - 1);
+            ret_lag3d(i,2:end) = array2table(table2array(raw(Locb(i+1)+3,2:end))./table2array(raw(Locb(i)+3,2:end)) - 1);
         else
             ret(i,2:end)= array2table(nan(1,size(ret,2)-1));
+            ret_lag3d(i,2:end)= array2table(nan(1,size(ret,2)-1));
         end
     end
+    
+    ret = [ret,ret_lag3d(:,2:end)];
 
 end
 
