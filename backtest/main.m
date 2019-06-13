@@ -1,5 +1,5 @@
 assets_file = 'D:/Projects/macro_test/国开债指数.xlsx';
-[nav,ret,reb] = load_assets(assets_file,5,'last');
+[~,ret,reb] = load_assets(assets_file,5,'last');
 
 factor_file = 'D:/Projects/macro_test/国债期限利差.xls';
 factor = load_factor(factor_file,reb,'sprd51');
@@ -41,7 +41,7 @@ sprdfin = tbl.mean_sprdfin;
 curv1510 = tbl.mean_curv1510;
 curv11030 = tbl.mean_curv11030;
 
-r_long = r5;
+r_long = r10;
 
 signal = roll_signal(sprd51,60,0.5);
 r_sprd = zeros(length(r1),1);
