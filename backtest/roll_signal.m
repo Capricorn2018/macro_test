@@ -8,8 +8,8 @@ function signal = roll_signal(factor,period,percent)
         
         f = factor((i-period+1):i);
         
-        if percent > 0.5
-            disp('percent > 0.5');
+        if percent < 0.5
+            disp('percent < 0.5');
         end
         
         long_q = quantile(f,percent);

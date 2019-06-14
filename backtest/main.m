@@ -33,6 +33,10 @@ r1 = tbl.CBA02521_lag3d;
 r5 = tbl.CBA02531_lag3d;
 r10 = tbl.CBA02551_lag3d;
 
+
+
+
+
 mom1 = tbl.mom;
 
 sprd51 = tbl.mean_sprd51;
@@ -42,17 +46,19 @@ curv1510 = tbl.mean_curv1510;
 curv11030 = tbl.mean_curv11030;
 
 r_long = r10;
+r_short = r1;
 
-signal = roll_signal(sprd51,60,0.5);
-r_sprd = zeros(length(r1),1);
-r_sprd(signal==1) = r_long(signal==1);
-r_sprd(signal~=1) = r1(signal~=1);
+signal_sprd = roll_signal(sprd51,36,0.75);
+[r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
 
-r_mom = zeros(length(r1),1);
-r_mom(mom1>0) = r_long(mom1>0);
-r_mom(mom1<=0) = r1(mom1<=0);
+signal_mom = mom1>0;
+[r_mom,alpha_mom] = long_short(r_long,r_short,signal_mom);
 
+% 两个策略各分1/4的权重,也就是最多久期估计也就4不到
 r_all = r_mom/4 + r_sprd/4 + r1/2;
+alpha = r_all - r1;
+
+
 
 nav = [1;cumprod(1+r_all)];
 nav1 = [1;cumprod(1+r1)];
@@ -64,15 +70,6 @@ plot(nav1);
 plot(nav_long);
 hold off;
 
-alpha = r_all - tbl.CBA02521;
-
 yr = 2005:2019;
-alpha_yr = zeros(length(yr),1);
-r_yr = zeros(length(yr),1);
-
-for i=1:length(yr)
-	alpha_yr(i) = prod(1+alpha(year(tbl.date)==yr(i))) - 1;
-	r_yr(i) = prod(1+r_all(year(tbl.date)==yr(i))) - 1;
-end
-	
+[alpha_yr,r_yr] = year_stats(alpha,r_all,tbl.date,yr);
 bar(alpha_yr);
