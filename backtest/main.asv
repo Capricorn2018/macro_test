@@ -24,8 +24,8 @@ tbl = merge_xy(factor, tbl);
 % 截取2005年以后的数
 tbl.mom1m = tbl.CBA02551 - tbl.CBA02521;
 tbl.mom1m = [NaN;tbl.mom1m(1:end-1)];
+
 tbl.mom2m = [NaN; movsum(tbl.mom1m,2,'Endpoints','discard')];
-tbl.mom3m = [NaN;NaN; movsum(tbl.mom1m,3,'Endpoints','discard')];
 
 tbl.stk3m = [nan(2,1); movsum(tbl.HS300,3,'Endpoints','discard')];
 
@@ -42,8 +42,8 @@ r10 = tbl.CBA02551_lag3d;
 
 
 mom1 = tbl.mom1m;
+
 mom2 = tbl.mom2m;
-mom3 = tbl.mom3m;
 
 stk3m = tbl.stk3m;
 
@@ -71,7 +71,7 @@ signal_stk3m = stk3m < 0;
 
 % 两个策略各分1/4的权重,也就是最多久期估计也就4不到
 % r_all = r_mom/8 + r_sprd/8 + r_fin/8 + r_stk/8 + r1/2;
-r_all = r_mom/6 + r_sprd/6 + r_fin/6 + r1/2;
+r_all = r_mom/8 + r_sprd/8 + r_fin/8 + r_stk/8 + r1/2;
 alpha = r_all - r1;
 
 
