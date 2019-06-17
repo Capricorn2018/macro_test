@@ -97,7 +97,7 @@ hold on;
 plot(nav_sprd,'r');
 plot(nav_fin,'g');
 plot(nav_stk,'k');
-plot(nav_short,'');
+plot(nav_short,'y');
 hold off;
 
 figure(3);
