@@ -89,6 +89,7 @@ plot(nav);
 hold on;
 plot(nav_short);
 plot(nav_long);
+legend('策略净值','中债1~3年国开财富指数','中债7~10年国开财富指数','Location','Best');
 hold off;
 
 figure(2);
