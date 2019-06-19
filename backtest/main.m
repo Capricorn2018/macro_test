@@ -1,4 +1,4 @@
-assets_file = 'D:/Projects/macro_test/国开债指数.xlsx';
+assets_file = 'D:/Projects/macro_test/指数.xls';
 [~,ret,reb] = load_assets(assets_file,5,'last');
 
 factor_file = 'D:/Projects/macro_test/国债期限利差.xls';
@@ -89,6 +89,7 @@ nav_short = [1;cumprod(1+r_short)];
 nav_long = [1;cumprod(1+r_long)];
 nav_mom = [1;cumprod(1+r_mom)];
 nav_curv = [1;cumprod(1+r_curv)];
+nav_sprd = [1;cumprod(1+r_sprd)];
 nav_fin = [1;cumprod(1+r_fin)];
 nav_stk = [1;cumprod(1+r_stk)];
 
@@ -108,14 +109,17 @@ plot(nav_curv,'m');
 plot(nav_fin,'g');
 plot(nav_stk,'k');
 plot(nav_short,'c');
-legend('动量','利差','凸度','金融债','股票','中债1~3','Location','Best');
+legend('mom','sprd','curv','fin','stk','中债1~3年国开债指数','Location','Best');
 hold off;
 
 figure(3);
 yr = 2005:2019;
 [alpha_yr,r_yr] = year_stats(alpha,r_all,tbl.date,yr);
-bar(alpha_yr);
+bar(yr,alpha_yr);
 
 figure(4);
 position = (signal_curv==1 & signal_fin==1)/3 + (signal_mom==1 & signal_stk3m==1)/3;
 plot(position);
+
+figure(5);
+bar(yr,r_yr);
