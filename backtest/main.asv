@@ -86,7 +86,7 @@ signal_stk3m = stk3m < 0;
 [r_stk, alpha_stk] = long_short(r_long,r_short,signal_stk3m);
 
 r_found = r_short;
-signal_found = (signal_sprd==1 &  signal_fin==1);
+signal_found = (signal_curv==1 &  signal_fin==1);
 r_found(signal_found==1) = r_long(signal_found==1);
 
 r_prev = r_short;
@@ -95,7 +95,6 @@ r_prev(signal_prev==1) = r_long(signal_prev==1);
 
 %%%%%%%%%%%% 最终策略 %%%%%%%%%%%%
 active = 0.5;
-signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev);
 position = (signal_found) * active/2 + (signal_prev) * active/2;
 r_all = r1 * (1-active) + r_prev * active/2 + r_found * active/2;
 alpha = r_all - r1;
@@ -135,15 +134,15 @@ hold off;
 figure(2);
 yr = 2005:2019;
 [alpha_yr,r_yr] = year_stats(alpha,r_all,tbl.date,yr);
-friction = 0.002; % 摩擦成本
-costs = fees(position,friction);
+costs_rate = 0.002;
+costs = fees(position,0.002);
 [costs_yr,~] = year_stats(costs,costs,tbl.date,yr);
 subplot(2,2,1);
 bar(yr,alpha_yr);
 title('未扣费超额收益');
 subplot(2,2,2);
 bar(yr,costs_yr);
-title(['摩擦费率0.',num2str(friction*1000),'%交易成本']);
+title(['摩擦费率0.',str(costs_rate*1000),'%交易成本']);
 subplot(2,2,3);
 bar(yr,alpha_yr-costs_yr);
 title('费后超额收益');
@@ -151,18 +150,19 @@ subplot(2,2,4);
 bar(yr,r_yr-costs_yr);
 title('费后绝对收益');
 
+
 figure(3);
 plot(position);
 title('长债仓位');
 
 figure(4);
 subplot(2,1,1);
-costs_p = fees(signal_prev,friction); % 假设10bps/20bps的调仓双向交易成本
+costs_p = fees(signal_prev,0.001); % 假设10bps的调仓双向交易成本
 [costs_p_yr,~] = year_stats(costs_p,costs_p,tbl.date,yr);
 bar(yr,costs_p_yr);
 title('动量策略交易成本');
 subplot(2,1,2);
-costs_f = fees(signal_found,friction);% 假设10bps/20bps的调仓双向交易成本
+costs_f = fees(signal_found,0.001);% 假设10bps的调仓双向交易成本
 [costs_f_yr,~] = year_stats(costs_f,costs_f,tbl.date,yr);
 bar(yr,costs_f_yr);
 title('风险溢价交易成本');
