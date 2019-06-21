@@ -60,8 +60,8 @@ sprd51_3m = tbl.sprd51_3m;
 sprdfin_3m = tbl.sprdfin_3m;
 curv1510_3m = tbl.curv1510_3m;
 
-r_long = r10;
-r_short = r1;
+r_long = tbl.CBA02551_mean3d;
+r_short = tbl.CBA02521_mean3d;
 
 signal_sprd = roll_signal(sprd51,36,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
@@ -85,25 +85,26 @@ signal_fin = roll_signal(sprdfin,36,0.5);
 signal_stk3m = stk3m < 0; 
 [r_stk, alpha_stk] = long_short(r_long,r_short,signal_stk3m);
 
+
+%%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 r_found = r_short;
-signal_found = (signal_sprd==1 &  signal_fin==1);
+signal_found = (signal_curv==1 &  signal_fin==1);
 r_found(signal_found==1) = r_long(signal_found==1);
 
 r_prev = r_short;
 signal_prev = (signal_stk3m==1 & signal_mom==1);
 r_prev(signal_prev==1) = r_long(signal_prev==1);
 
-%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%
-active = 0.5;
+active = 0.4; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev);
 position = (signal_found) * active/2 + (signal_prev) * active/2;
 r_all = r1 * (1-active) + r_prev * active/2 + r_found * active/2;
 alpha = r_all - r1;
-%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 
 nav = [1;cumprod(1+r_all)];
-nav_short = [1;cumprod(1+r_short)];
-nav_long = [1;cumprod(1+r_long)];
+nav_short = [1;cumprod(1+r1)];
+nav_long = [1;cumprod(1+r10)];
 nav_mom = [1;cumprod(1+r_mom)];
 nav_curv = [1;cumprod(1+r_curv)];
 nav_sprd = [1;cumprod(1+r_sprd)];
