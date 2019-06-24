@@ -103,14 +103,14 @@ signal_stk3m = stk3m < 0;
 
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 r_found = r_short;
-signal_found = (signal_sprd==1 &  signal_fin==1);
+signal_found = (signal_sprd==1 &  signal_curv==1);
 r_found(signal_found==1) = r_long(signal_found==1);
 
 r_prev = r_short;
 signal_prev = (signal_stk3m==1 & signal_mom==1);
 r_prev(signal_prev==1) = r_long(signal_prev==1);
 
-active = 0.6; % 主动长债仓位限制
+active = 0.4; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev);
 position = (signal_found) * active/2 + (signal_prev) * active/2;
 r_all = r1 * (1-active) + r_prev * active/2 + r_found * active/2;
