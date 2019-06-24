@@ -1,13 +1,15 @@
-function [nav,ret,reb] = load_assets(filename,num_days,direction)
+function [nav,ret] = load_assets(filename,reb)
 
-     raw = readtable(filename);
+    raw = readtable(filename);
      
     raw.Properties.VariableNames(1) = {'date'};
     raw.date = datenum(raw.date);
 
-    reb = find_month_dates(num_days,raw.date,direction);
+    %reb = find_month_dates(num_days,raw.date,direction);
 
     [~,Locb] = ismember(reb,raw.date);
+    
+    Locb = Locb(Locb>0); % 去掉不在raw.date里面的
 
     nav = raw(Locb,:);
     ret = array2table(nan(size(nav)),'VariableNames',nav.Properties.VariableNames);
@@ -22,7 +24,7 @@ function [nav,ret,reb] = load_assets(filename,num_days,direction)
 
     for i = 1:length(reb)
 
-        if(i<length(reb))
+        if(i<length(reb) && Locb(i+1)+3 <= length(raw.date))
             ret(i,2:end) = array2table(table2array(raw(Locb(i+1),2:end))./table2array(raw(Locb(i),2:end)) - 1);
             ret_lag3d(i,2:end) = array2table(table2array(raw(Locb(i+1)+3,2:end))./table2array(raw(Locb(i)+3,2:end)) - 1);
             ret_lag2d(i,2:end) = array2table(table2array(raw(Locb(i+1)+2,2:end))./table2array(raw(Locb(i)+2,2:end)) - 1); 

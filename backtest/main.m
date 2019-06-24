@@ -1,5 +1,20 @@
+num_days = 5; % 倒数第5交易日
+direction = 'last'; % 倒数的
 assets_file = 'D:/Projects/macro_test/指数.xls';
-[~,ret,reb] = load_assets(assets_file,5,'last');
+raw = readtable(assets_file);
+raw.Properties.VariableNames(1) = {'date'};
+raw.date = datenum(raw.date);
+reb = find_month_dates(num_days,raw.date,direction);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 这里需要手动调整最后一个交易日 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+reb(end) = datenum('2019/06/21');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 这里需要手动调整最后一个交易日 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+[~,ret] = load_assets(assets_file,reb);
 
 factor_file = 'D:/Projects/macro_test/国债期限利差.xls';
 factor = load_factor(factor_file,reb,'sprd51');
@@ -11,10 +26,10 @@ factor = load_factor(factor_file,reb,'curv1510');
 
 tbl = merge_xy(factor, tbl);
 
-factor_file = 'D:/Projects/macro_test/凸度30.xls';
-factor = load_factor(factor_file,reb,'curv11030');
+%factor_file = 'D:/Projects/macro_test/凸度30.xls';
+%factor = load_factor(factor_file,reb,'curv11030');
 
-tbl = merge_xy(factor, tbl);
+%tbl = merge_xy(factor, tbl);
 
 factor_file = 'D:/Projects/macro_test/国开利差.xls';
 factor = load_factor(factor_file,reb,'sprdfin');
@@ -54,14 +69,14 @@ sprd51 = tbl.mean_sprd51;
 sprdfin = tbl.mean_sprdfin;
 
 curv1510 = tbl.mean_curv1510;
-curv11030 = tbl.mean_curv11030;
+%curv11030 = tbl.mean_curv11030;
 
 sprd51_3m = tbl.sprd51_3m;
 sprdfin_3m = tbl.sprdfin_3m;
 curv1510_3m = tbl.curv1510_3m;
 
-r_long = tbl.CBA02551_mean3d;
-r_short = tbl.CBA02521_mean3d;
+r_long = tbl.CBA02551_lag3d;
+r_short = tbl.CBA02521_lag3d;
 
 signal_sprd = roll_signal(sprd51,36,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
@@ -73,7 +88,7 @@ signal_sprd3m = roll_signal(sprd51_3m,36,0.5);
 signal_curv3m = roll_signal(curv1510_3m,36,0.5);
 signal_fin3m = roll_signal(sprdfin_3m,36,0.5);
 
-signal_mom = mom1m>0; % 上月跑输超过15bps才出来
+signal_mom = mom1m>0;
 [r_mom,alpha_mom] = long_short(r_long,r_short,signal_mom);
 
 signal_mom3m = mom3m>0;
@@ -88,14 +103,14 @@ signal_stk3m = stk3m < 0;
 
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 r_found = r_short;
-signal_found = (signal_curv==1 &  signal_fin==1);
+signal_found = (signal_sprd==1 &  signal_fin==1);
 r_found(signal_found==1) = r_long(signal_found==1);
 
 r_prev = r_short;
 signal_prev = (signal_stk3m==1 & signal_mom==1);
 r_prev(signal_prev==1) = r_long(signal_prev==1);
 
-active = 0.4; % 主动长债仓位限制
+active = 0.6; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev);
 position = (signal_found) * active/2 + (signal_prev) * active/2;
 r_all = r1 * (1-active) + r_prev * active/2 + r_found * active/2;
