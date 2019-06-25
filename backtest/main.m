@@ -13,7 +13,6 @@ reb(end) = datenum('2019/06/18');
 % 这里需要手动调整最后一个交易日 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
 [~,ret] = load_assets(assets_file,reb);
 
 factor_file = 'D:/Projects/macro_test/国债期限利差.xls';
@@ -103,7 +102,7 @@ signal_stk3m = stk3m < 0;
 
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 r_found = r_short;
-signal_found = (signal_sprd==1 &  signal_curv==1);
+signal_found = (signal_curv==1 &  signal_sprd==1);
 r_found(signal_found==1) = r_long(signal_found==1);
 
 r_prev = r_short;
