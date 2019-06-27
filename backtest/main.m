@@ -150,7 +150,7 @@ hold off;
 figure(2);
 yr = 2005:2019;
 [alpha_yr,r_yr] = year_stats(alpha,r_all,tbl.date,yr);
-friction = 0.002; % 摩擦成本
+friction = 0.001; % 摩擦成本
 costs = fees(position,friction);
 [costs_yr,~] = year_stats(costs,costs,tbl.date,yr);
 subplot(2,2,1);
