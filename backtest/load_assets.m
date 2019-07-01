@@ -1,9 +1,11 @@
 function [nav,ret] = load_assets(filename,reb)
 
-    raw = readtable(filename);
+    %raw = readtable(filename);
+    x = load(filename);
+    raw = x.assets;
      
-    raw.Properties.VariableNames(1) = {'date'};
-    raw.date = datenum(raw.date);
+    %raw.Properties.VariableNames(1) = {'date'};
+    %raw.date = datenum(raw.date);
 
     %reb = find_month_dates(num_days,raw.date,direction);
 

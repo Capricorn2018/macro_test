@@ -1,39 +1,53 @@
-num_days = 5; % 倒数第5交易日
-direction = 'last'; % 倒数的
-assets_file = 'D:/Projects/macro_test/指数.xls';
-raw = readtable(assets_file);
-raw.Properties.VariableNames(1) = {'date'};
-raw.date = datenum(raw.date);
-reb = find_month_dates(num_days,raw.date,direction);
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 这里需要手动调整最后一个交易日 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-reb(end) = datenum('2019/06/18');
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 这里需要手动调整最后一个交易日 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% num_days = 5; % 倒数第5交易日
+% direction = 'last'; % 倒数的
+% assets_file = 'D:/Projects/macro_test/指数.xls';
+% raw = readtable(assets_file);
+% raw.Properties.VariableNames(1) = {'date'};
+% raw.date = datenum(raw.date);
+% reb = find_month_dates(num_days,raw.date,direction);
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % 这里需要手动调整最后一个交易日 %
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% reb(end) = datenum('2019/06/18');
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % 这里需要手动调整最后一个交易日 %
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% [~,ret] = load_assets(assets_file,reb);
+% 
+% factor_file = 'D:/Projects/macro_test/国债期限利差.xls';
+% factor = load_factor(factor_file,reb,'sprd51');
+% 
+% tbl = merge_xy(factor, ret);
+% 
+% factor_file = 'D:/Projects/macro_test/凸度.xls';
+% factor = load_factor(factor_file,reb,'curv1510');
+% 
+% % tbl = merge_xy(factor, tbl);
+% %factor_file = 'D:/Projects/macro_test/凸度30.xls';
+% %factor = load_factor(factor_file,reb,'curv11030');
+% 
+% %tbl = merge_xy(factor, tbl);
+% 
+% factor_file = 'D:/Projects/macro_test/国开利差.xls';
+% factor = load_factor(factor_file,reb,'sprdfin');
+% 
+% tbl = merge_xy(factor, tbl);
 
-[~,ret] = load_assets(assets_file,reb);
+start_dt = '1990-01-01';
+end_dt = '2019-06-28';
+file = 'D:/Projects/macro_test/data.mat';
+[factors,assets] = wind_data(file,start_dt,end_dt);
 
-factor_file = 'D:/Projects/macro_test/国债期限利差.xls';
-factor = load_factor(factor_file,reb,'sprd51');
+reb = get_dates(file,5,'last');
 
+reb(end) = datenum('2019-06-24');
+[~,ret] = load_assets(file,reb);
+
+factor = load_factor(file,reb);
 tbl = merge_xy(factor, ret);
 
-factor_file = 'D:/Projects/macro_test/凸度.xls';
-factor = load_factor(factor_file,reb,'curv1510');
 
-tbl = merge_xy(factor, tbl);
-
-%factor_file = 'D:/Projects/macro_test/凸度30.xls';
-%factor = load_factor(factor_file,reb,'curv11030');
-
-%tbl = merge_xy(factor, tbl);
-
-factor_file = 'D:/Projects/macro_test/国开利差.xls';
-factor = load_factor(factor_file,reb,'sprdfin');
-
-tbl = merge_xy(factor, tbl);
 
 % 截取2005年以后的数
 tbl.mom1m = tbl.CBA02551 - tbl.CBA02521;
