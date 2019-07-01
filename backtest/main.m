@@ -50,7 +50,7 @@ sprd51_3m = tbl.sprd51_3m;
 sprdfin_3m = tbl.sprdfin_3m;
 curv1510_3m = tbl.curv1510_3m;
 
-r_long = tbl.CBA02551_lag3d;
+r_long = tbl.CBA02531_lag3d;
 r_short = tbl.CBA02521_lag3d;
 
 signal_sprd = roll_signal(sprd51,36,0.5);
@@ -85,7 +85,7 @@ r_prev = r_short;
 signal_prev = (signal_stk3m==1 & signal_mom==1);
 r_prev(signal_prev==1) = r_long(signal_prev==1);
 
-active = 0.4; % 主动长债仓位限制
+active = 1; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev);
 position = (signal_found) * active/2 + (signal_prev) * active/2;
 r_all = r1 * (1-active) + r_prev * active/2 + r_found * active/2;
@@ -126,7 +126,7 @@ hold off;
 figure(2);
 yr = 2005:2019;
 [alpha_yr,r_yr] = year_stats(alpha,r_all,tbl.date,yr);
-friction = 0.001; % 摩擦成本
+friction = 0.0005; % 摩擦成本
 costs = fees(position,friction);
 [costs_yr,~] = year_stats(costs,costs,tbl.date,yr);
 subplot(2,2,1);
@@ -134,7 +134,7 @@ bar(yr,alpha_yr);
 title('未扣费超额收益');
 subplot(2,2,2);
 bar(yr,costs_yr);
-title(['摩擦费率0.',num2str(friction*1000),'%交易成本']);
+title(['摩擦费率',num2str(friction*10000),'bps交易成本']);
 subplot(2,2,3);
 bar(yr,alpha_yr-costs_yr);
 title('费后超额收益');
