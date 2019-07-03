@@ -40,11 +40,11 @@ function [nav,ret] = load_assets(filename,reb)
                 ret_mean3d(i,2:end) = ret(i,2:end);
             end
         else
-            ret(i,2:end)= array2table(nan(1,size(ret,2)-1));
-            ret_lag3d(i,2:end)= array2table(nan(1,size(ret,2)-1));
-            ret_lag2d(i,2:end)= array2table(nan(1,size(ret,2)-1));
-            ret_lag1d(i,2:end)= array2table(nan(1,size(ret,2)-1));
-            ret_mean3d(i,2:end) = array2table(nan(1,size(ret,2)-1));
+            ret(i,2:end)= array2table(table2array(raw(end,2:end)./table2array(raw(Locb(i)))-1));
+            ret_lag3d(i,2:end)= ret(i,2:end);
+            ret_lag2d(i,2:end)= ret(i,2:end);
+            ret_lag1d(i,2:end)= ret(i,2:end);
+            ret_mean3d(i,2:end) = ret(i,2:end);
         end
     end
     
