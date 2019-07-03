@@ -32,6 +32,7 @@ function  [dates, dates_idx] = find_month_dates( num, trading_dates, direction)
     
     % ·µ»Ø¸³Öµ
     dates = ds.Fun1_dates_num;
+    dates = dates(~isnan(dates));
     
     dates_idx = zeros(length(dates),1);
     for i = 1:length(dates)

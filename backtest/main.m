@@ -53,6 +53,7 @@ curv1510_3m = tbl.curv1510_3m;
 r_long = tbl.CBA02551_lag3d;
 r_short = tbl.CBA02521_lag3d;
 r_base = r_short;
+r_mid = tbl.CBA02531_lag3d;
 
 signal_sprd = roll_signal(sprd51,36,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
@@ -88,8 +89,8 @@ r_prev(signal_prev==1) = r_long(signal_prev==1);
 
 active = 0.4; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev);
-position = (signal_found) * active/2 + (signal_prev) * active/2;
-r_all = r_base * (1-active) + r_prev * active/2 + r_found * active/2;
+position = (signal_found) * active * 1/2 + (signal_prev) * active * 1/2;
+r_all = r_base * (1-active) + r_found * active * 1/2 + r_prev * active * 1/2 ;
 alpha = r_all - r1;
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 
@@ -109,9 +110,9 @@ datetick('x','yyyy','keeplimits');
 hold on;
 plot(tbl.date,nav_short(1:end-1),'b');
 plot(tbl.date,nav_long(1:end-1),'k');
-legend('策略净值','中债1~3年国开财富指数','中债7~10年国开财富指数','Location','northwest');
+legend('策略净值','中债1~3年国开财富指数','中债7~10年国开财富指数','Location','Best');
 legend('boxoff');
-title('策略净值曲线');
+title('策略净值曲线','FontSize',16);
 axis tight;
 hold off;
 subplot(2,1,2);
@@ -124,7 +125,7 @@ plot(tbl.date,nav_stk(1:end-1),'k');
 plot(tbl.date,nav_short(1:end-1),'r--','LineWidth',2);
 datetick('x','yyyy','keeplimits');
 legend('mom','sprd','curv','fin','stk','中债1~3年国开债指数','Location','Best');
-title('单个因子策略净值曲线');
+title('单个因子策略净值曲线','FontSize',16);
 axis tight;
 legend();
 legend('boxoff');
@@ -139,19 +140,19 @@ costs = fees(position,friction);
 subplot(2,2,1);
 bar(yr,alpha_yr*10000,'FaceColor',[0,0.5,0.5]);
 ylabel('bps');
-title('未扣费超额收益');
+title('未扣费超额收益','FontSize',16);
 axis tight;
 subplot(2,2,2);
 bar(yr,costs_yr,'FaceColor',[0,0.5,0.5]);
-title(['摩擦费率',num2str(friction*10000),'bps交易成本']);
+title(['摩擦费率',num2str(friction*10000),'bps交易成本'],'FontSize',16);
 axis tight;
 subplot(2,2,3);
 bar(yr,alpha_yr-costs_yr,'FaceColor',[0,0.5,0.5]);
-title('费后超额收益');
+title('费后超额收益','FontSize',16);
 axis tight;
 subplot(2,2,4);
 bar(yr,r_yr-costs_yr,'FaceColor',[0,0.5,0.5]);
-title('费后绝对收益');
+title('费后绝对收益','FontSize',16);
 axis tight;
 
 figure(3);
@@ -163,9 +164,9 @@ subplot(2,1,1);
 costs_p = fees(signal_prev,friction); % 假设10bps/20bps的调仓双向交易成本
 [costs_p_yr,~] = year_stats(costs_p,costs_p,tbl.date,yr);
 bar(yr,costs_p_yr);
-title('动量策略交易成本');
+title('动量策略交易成本','FontSize',16);
 subplot(2,1,2);
 costs_f = fees(signal_found,friction);% 假设10bps/20bps的调仓双向交易成本
 [costs_f_yr,~] = year_stats(costs_f,costs_f,tbl.date,yr);
 bar(yr,costs_f_yr);
-title('风险溢价交易成本');
+title('风险溢价交易成本','FontSize',16);
