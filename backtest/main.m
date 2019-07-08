@@ -15,7 +15,8 @@ tbl = merge_xy(factor, ret);
 tbl.mom1m = tbl.CBA02551 - tbl.CBA02521;
 tbl.mom1m = [NaN;tbl.mom1m(1:end-1)];
 tbl.mom2m = [NaN; movsum(tbl.mom1m,2,'Endpoints','discard')];
-tbl.mom3m = [NaN;NaN; movsum(tbl.mom1m,3,'Endpoints','discard')];
+tbl.mom3m = [nan(2,1); movsum(tbl.mom1m,3,'Endpoints','discard')];
+tbl.mom6m = [nan(5,1); movsum(tbl.mom1m,6,'Endpoints','discard')];
 
 tbl.stk1m = [NaN;tbl.HS300(1:end-1)];
 tbl.stk3m = [nan(2,1); movsum(tbl.stk1m,3,'Endpoints','discard')];
@@ -163,10 +164,10 @@ figure(4);
 subplot(2,1,1);
 costs_p = fees(signal_prev,friction); % 假设10bps/20bps的调仓双向交易成本
 [costs_p_yr,~] = year_stats(costs_p,costs_p,tbl.date,yr);
-bar(yr,costs_p_yr);
+bar(yr,costs_p_yr,'FaceColor',[0,0.5,0.5]);
 title('动量策略交易成本','FontSize',16);
 subplot(2,1,2);
 costs_f = fees(signal_found,friction);% 假设10bps/20bps的调仓双向交易成本
 [costs_f_yr,~] = year_stats(costs_f,costs_f,tbl.date,yr);
-bar(yr,costs_f_yr);
+bar(yr,costs_f_yr,'FaceColor',[0,0.5,0.5]);
 title('风险溢价交易成本','FontSize',16);
