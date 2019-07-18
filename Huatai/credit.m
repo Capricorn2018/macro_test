@@ -6,6 +6,7 @@ data = table(data(:,1),data(:,2),data(:,3),'VariableNames',{'fin_mth','fin_cum',
 fin_rep = nan(height(data),1);
 fin_rep(1) = data.fin_cum(1);
 
+% 2016年之前社融存量数据非每个月更新，用月度数据补齐
 for i = 2:height(data)
 
     if( ~isnan(data.fin_cum(i)) )
@@ -18,7 +19,6 @@ for i = 2:height(data)
     
     
 end
-
 
 fin_growth = nan(length(fin_rep),1);
 fin_growth(12:end) = fin_rep(12:end)./fin_rep(1:end-11) - 1;
