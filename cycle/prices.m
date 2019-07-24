@@ -2,8 +2,8 @@
 [data,~,~,times,~,~]=w.edb('S0031505,M0000612,M0001227,S0059749','2002-01-01','2019-07-15');
 
 crb = data(:,1);
-cpi = data(:,2);
-ppi = data(:,3);
+cpi = [NaN;data(1:end-1,2)];
+ppi = [NaN;data(1:end-1,3)];
 bond = data(:,4);
 
 crb = log(crb);
