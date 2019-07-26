@@ -1,11 +1,11 @@
 start_dt = '1990-01-01';
-end_dt = '2019-07-23';
+end_dt = '2019-07-25';
 file = 'D:/Projects/macro_test/data.mat';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2019-07-23'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2019-07-25'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,reb);
 
 factor = load_factor(file,reb);
@@ -135,7 +135,7 @@ hold off;
 figure(2);
 yr = 2005:2019;
 [alpha_yr,r_yr] = year_stats(alpha,r_all,tbl.date,yr);
-friction = 0.0005; % 摩擦成本
+friction = 0.0010; % 摩擦成本
 costs = fees(position,friction);
 [costs_yr,~] = year_stats(costs,costs,tbl.date,yr);
 subplot(2,2,1);
