@@ -18,10 +18,10 @@ function [factors,assets] = wind_data(filename,start_dt,end_dt)
     
     names = {'date','CBA02511','CBA02521','CBA02531','CBA02541','CBA02551','HS300','CBA01921'};
     assets = array2table([wsd_times,wsd_data],'VariableNames',names);
-    
-    
+        
     save(filename,'assets','factors');
     
+    w.close()    
 
 end
 
