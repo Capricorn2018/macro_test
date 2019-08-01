@@ -56,15 +56,15 @@ r_short = tbl.CBA02521_lag3d;
 r_base = r_short;
 r_mid = tbl.CBA02531_lag3d;
 
-signal_sprd = roll_signal(sprd51,36,0.5);
+signal_sprd = roll_signal(sprd51,40,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
 
-signal_curv = roll_signal(curv1510,36,0.5);
+signal_curv = roll_signal(curv1510,40,0.5);
 [r_curv,alpha_curve] = long_short(r_long,r_short,signal_curv);
 
-signal_sprd3m = roll_signal(sprd51_3m,36,0.5);
-signal_curv3m = roll_signal(curv1510_3m,36,0.5);
-signal_fin3m = roll_signal(sprdfin_3m,36,0.5);
+signal_sprd3m = roll_signal(sprd51_3m,40,0.5);
+signal_curv3m = roll_signal(curv1510_3m,40,0.5);
+signal_fin3m = roll_signal(sprdfin_3m,40,0.5);
 
 signal_mom = mom1m>0;
 [r_mom,alpha_mom] = long_short(r_long,r_short,signal_mom);
@@ -72,7 +72,7 @@ signal_mom = mom1m>0;
 signal_mom3m = mom3m>0;
 [r_mom3m,alpha_mom3m] = long_short(r_long,r_short,signal_mom3m);
 
-signal_fin = roll_signal(sprdfin,36,0.5);
+signal_fin = roll_signal(sprdfin,40,0.5);
 [r_fin,alpha_fin] = long_short(r_long,r_short,signal_fin);
 
 signal_stk3m = stk3m < 0; 
