@@ -23,7 +23,8 @@ tbl.stk3m = [nan(2,1); movsum(tbl.stk1m,3,'Endpoints','discard')];
 
 tbl.curv1510_3m = [nan(2,1);movsum(tbl.mean_curv1510,3,'Endpoints','discard')];
 tbl.sprd51_3m = [nan(2,1);movsum(tbl.mean_sprd51,3,'Endpoints','discard')];
-tbl.sprdfin_3m = [nan(2,1);movsum(tbl.mean_sprd51,3,'Endpoints','discard')];
+tbl.sprdfin_3m = [nan(2,1);movsum(tbl.mean_sprdfin,3,'Endpoints','discard')];
+tbl.sprdliq_3m = [nan(2,1);movsum(tbl.mean_sprdliq,3,'Endpoints','discard')];
 
 tbl_orig = tbl;
 tbl = tbl(year(tbl.date)>=2005,:);
@@ -43,6 +44,7 @@ stk3m = tbl.stk3m;
 
 sprd51 = tbl.mean_sprd51;
 sprdfin = tbl.mean_sprdfin;
+sprdliq = tbl.mean_sprdliq;
 
 curv1510 = tbl.mean_curv1510;
 %curv11030 = tbl.mean_curv11030;
@@ -50,6 +52,7 @@ curv1510 = tbl.mean_curv1510;
 sprd51_3m = tbl.sprd51_3m;
 sprdfin_3m = tbl.sprdfin_3m;
 curv1510_3m = tbl.curv1510_3m;
+sprdliq_3m = tbl.sprdliq_3m;
 
 r_long = tbl.CBA02551_lag3d;
 r_short = tbl.CBA02521_lag3d;
