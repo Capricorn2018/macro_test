@@ -1,5 +1,5 @@
 start_dt = '1990-01-01';
-end_dt = '2019-07-25';
+end_dt = '2019-08-02';
 file = 'D:/Projects/macro_test/data.mat';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
@@ -21,10 +21,11 @@ tbl.mom6m = [nan(5,1); movsum(tbl.mom1m,6,'Endpoints','discard')];
 tbl.stk1m = [NaN;tbl.HS300(1:end-1)];
 tbl.stk3m = [nan(2,1); movsum(tbl.stk1m,3,'Endpoints','discard')];
 
-tbl.curv1510_3m = [nan(2,1);movsum(tbl.mean_curv1510,3,'Endpoints','discard')];
-tbl.sprd51_3m = [nan(2,1);movsum(tbl.mean_sprd51,3,'Endpoints','discard')];
-tbl.sprdfin_3m = [nan(2,1);movsum(tbl.mean_sprdfin,3,'Endpoints','discard')];
-tbl.sprdliq_3m = [nan(2,1);movsum(tbl.mean_sprdliq,3,'Endpoints','discard')];
+tbl.curv1510_3m = [nan(2,1);movmean(tbl.mean_curv1510,3,'Endpoints','discard')];
+tbl.curv135_3m = [nan(2,1);movmean(tbl.mean_curve135,3,'Endpoints','discard')];
+tbl.sprd51_3m = [nan(2,1);movmean(tbl.mean_sprd51,3,'Endpoints','discard')];
+tbl.sprdfin_3m = [nan(2,1);movmean(tbl.mean_sprdfin,3,'Endpoints','discard')];
+tbl.sprdliq_3m = [nan(2,1);movmean(tbl.mean_sprdliq,3,'Endpoints','discard')];
 
 tbl_orig = tbl;
 tbl = tbl(year(tbl.date)>=2005,:);
@@ -46,11 +47,13 @@ sprd51 = tbl.mean_sprd51;
 sprdfin = tbl.mean_sprdfin;
 sprdliq = tbl.mean_sprdliq;
 
+curv135 = tbl.mean_curve135;
 curv1510 = tbl.mean_curv1510;
 %curv11030 = tbl.mean_curv11030;
 
 sprd51_3m = tbl.sprd51_3m;
 sprdfin_3m = tbl.sprdfin_3m;
+curv135_3m = tbl.curve135_3m;
 curv1510_3m = tbl.curv1510_3m;
 sprdliq_3m = tbl.sprdliq_3m;
 
