@@ -12,9 +12,10 @@ function [factors,assets] = wind_data(filename,start_dt,end_dt)
     
     factors = table();
     factors.date = edb_times;
+    factors.sprd31 = edb.S0059746 - edb.S0059744;
     factors.sprd51 = edb.S0059747 - edb.S0059744;
     factors.curv1510 = 2 * edb.S0059747 - edb.S0059749 - edb.S0059744;
-    factors.curve135 = 2*edb.S0059746 - edb.S0059747 - edb.S0059744;
+    factors.curve135 = 2 * edb.S0059746 - edb.S0059747 - edb.S0059744;
     factors.sprdfin = edb.M1004271 - edb.S0059749;    
     factors.sprdliq = edb.M1007675 - edb.M1004271;
     

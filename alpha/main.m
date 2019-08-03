@@ -21,8 +21,9 @@ tbl.mom6m = [nan(5,1); movsum(tbl.mom1m,6,'Endpoints','discard')];
 tbl.stk1m = [NaN;tbl.HS300(1:end-1)];
 tbl.stk3m = [nan(2,1); movsum(tbl.stk1m,3,'Endpoints','discard')];
 
-tbl.curv1510_3m = [nan(2,1);movmean(tbl.mean_curv1510,3,'Endpoints','discard')];
 tbl.curv135_3m = [nan(2,1);movmean(tbl.mean_curve135,3,'Endpoints','discard')];
+tbl.curv1510_3m = [nan(2,1);movmean(tbl.mean_curv1510,3,'Endpoints','discard')];
+tbl.sprd31_3m = [nan(2,1);movmean(tbl.mean_sprd31,3,'Endpoints','discard')];
 tbl.sprd51_3m = [nan(2,1);movmean(tbl.mean_sprd51,3,'Endpoints','discard')];
 tbl.sprdfin_3m = [nan(2,1);movmean(tbl.mean_sprdfin,3,'Endpoints','discard')];
 tbl.sprdliq_3m = [nan(2,1);movmean(tbl.mean_sprdliq,3,'Endpoints','discard')];
@@ -43,18 +44,19 @@ mom3m = tbl.mom3m;
 
 stk3m = tbl.stk3m;
 
+sprd31 = tbl.mean_sprd31;
 sprd51 = tbl.mean_sprd51;
 sprdfin = tbl.mean_sprdfin;
 sprdliq = tbl.mean_sprdliq;
 
 curv135 = tbl.mean_curve135;
 curv1510 = tbl.mean_curv1510;
-%curv11030 = tbl.mean_curv11030;
 
+sprd31_3m = tbl.sprd31_3m;
 sprd51_3m = tbl.sprd51_3m;
-sprdfin_3m = tbl.sprdfin_3m;
 curv135_3m = tbl.curv135_3m;
 curv1510_3m = tbl.curv1510_3m;
+sprdfin_3m = tbl.sprdfin_3m;
 sprdliq_3m = tbl.sprdliq_3m;
 
 r_long = tbl.CBA02551_lag3d;
@@ -67,6 +69,9 @@ signal_sprd = roll_signal(sprd51,40,0.5);
 
 signal_curv = roll_signal(curv1510,40,0.5);
 [r_curv,alpha_curve] = long_short(r_long,r_short,signal_curv);
+
+signal_curv2 = roll_signal(curv135,40,0.5);
+[r_curv2,alpha_curv2] = long_short(r_long,r_short,signal_curv2);
 
 signal_sprd3m = roll_signal(sprd51_3m,40,0.5);
 signal_curv3m = roll_signal(curv1510_3m,40,0.5);
@@ -88,6 +93,7 @@ signal_stk3m = stk3m < 0;
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 r_found = r_base;
 signal_found = (signal_curv==1 &  signal_sprd==1);
+% signal_found2 = (signal_curv==-1 & signal_curv2==-1); % 用来做7~10年指数增强
 r_found(signal_found==1) = r_long(signal_found==1);
 
 r_prev = r_base;
