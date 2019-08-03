@@ -53,7 +53,7 @@ curv1510 = tbl.mean_curv1510;
 
 sprd51_3m = tbl.sprd51_3m;
 sprdfin_3m = tbl.sprdfin_3m;
-curv135_3m = tbl.curve135_3m;
+curv135_3m = tbl.curv135_3m;
 curv1510_3m = tbl.curv1510_3m;
 sprdliq_3m = tbl.sprdliq_3m;
 
