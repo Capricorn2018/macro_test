@@ -10,7 +10,11 @@ function [alpha_yr,r_yr] = year_stats(alpha,ret,date,yr)
     r_nan(isnan(ret)) = 0;
     
     dt_yr = year(date);
-    dt_yr = [dt_yr(2:end);NaN];
+    if month(date(end))==12
+        dt_yr = [dt_yr(2:end);dt_yr(end)+1];
+    else
+        dt_yr = [dt_yr(2:end);dt_yr(end)];
+    end
 
     for i=1:length(yr)
         alpha_yr(i) = prod(1+alpha_nan(dt_yr==yr(i))) - 1;
