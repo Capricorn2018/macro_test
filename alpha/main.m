@@ -41,6 +41,7 @@ r10 = tbl.CBA02551_lag3d;
 mom1m = tbl.mom1m;
 mom2m = tbl.mom2m;
 mom3m = tbl.mom3m;
+mom6m = tbl.mom6m;
 
 stk3m = tbl.stk3m;
 
@@ -83,6 +84,9 @@ signal_mom = mom1m>0;
 signal_mom3m = mom3m>0;
 [r_mom3m,alpha_mom3m] = long_short(r_long,r_short,signal_mom3m);
 
+signal_mom6m = mom6m<0; % 注意这里是反转，不是动量！
+[r_mom6m,alpha_mom6m] = long_short(r_long,r_short,signal_mom6m);
+
 signal_fin = roll_signal(sprdfin,40,0.5);
 [r_fin,alpha_fin] = long_short(r_long,r_short,signal_fin);
 
@@ -93,17 +97,21 @@ signal_stk3m = stk3m < 0;
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 r_found = r_base;
 signal_found = (signal_curv==1 &  signal_sprd==1);
-% signal_found2 = (signal_curv==-1 & signal_curv2==-1); % 用来做7~10年指数增强
+% signal_found2 = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,用来做7~10年指数增强
 r_found(signal_found==1) = r_long(signal_found==1);
+
+r_reverse = r_base;
+signal_reverse = (signal_found==1) & (signal_mom6m==1); % 曲线+反转策略
+r_reverse(signal_reverse==1) = r_long(signal_reverse==1);
 
 r_prev = r_base;
 signal_prev = (signal_stk3m==1 & signal_mom==1);
 r_prev(signal_prev==1) = r_long(signal_prev==1);
 
-active = 0.4; % 主动长债仓位限制
+active = 0.6; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev);
-position = (signal_found) * active * 1/2 + (signal_prev) * active * 1/2;
-r_all = r_base * (1-active) + r_found * active * 1/2 + r_prev * active * 1/2 ;
+position = (signal_found) * active * 1/3 + (signal_prev) * active * 1/3 + (signal_reverse) * active * 1/3;
+r_all = r_base * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
 alpha = r_all - r1;
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 
