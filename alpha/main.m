@@ -62,7 +62,6 @@ sprdliq_3m = tbl.sprdliq_3m;
 
 r_long = tbl.CBA02551_lag3d;
 r_short = tbl.CBA02521_lag3d;
-r_base = r_short;
 r_mid = tbl.CBA02531_lag3d;
 
 signal_sprd = roll_signal(sprd51,40,0.5);
@@ -95,10 +94,19 @@ signal_stk3m = stk3m < 0;
 
 
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
+% 基准收益
+r_base = r_short;
+
+% 看空时换货币
+r_money = r_base;
+signal_money = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,或者从1~3换到货币
+r_money(signal_money==1) = r0(signal_money==1);
+
+
 r_found = r_base;
 signal_found = (signal_curv==1 &  signal_sprd==1);
-% signal_found2 = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,用来做7~10年指数增强
 r_found(signal_found==1) = r_long(signal_found==1);
+
 
 r_reverse = r_base;
 signal_reverse = (signal_found==1) & (signal_mom6m==1); % 曲线+反转策略
@@ -111,8 +119,8 @@ r_prev(signal_prev==1) = r_long(signal_prev==1);
 active = 0.6; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev);
 position = (signal_found) * active * 1/3 + (signal_prev) * active * 1/3 + (signal_reverse) * active * 1/3;
-r_all = r_base * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
-alpha = r_all - r1;
+r_all = r_money * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
+alpha = r_all - r_base;
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 
 nav = [1;cumprod(1+r_all)];
