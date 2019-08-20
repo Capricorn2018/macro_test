@@ -17,7 +17,7 @@ function [ output_args ] = indices()
     
     tbl = tbl(:,['times';fields]);
     
-    rvol = movstd(tbl.PCT_CHG,[19,0],'Endpoints','fill');
+    rvol = movstd(tbl.PCT_CHG,[19,0],'Endpoints','fill'); % 这是日期对应前20个工作日的波动率
     tbl.rvol = rvol * sqrt(252);
     
     rturn = movsum(tbl.FREE_TURN_N,[19,0],'Endpoints','fill');
