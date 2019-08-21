@@ -17,11 +17,17 @@ function [ output_args ] = indices()
     
     tbl = tbl(:,['times';fields]);
     
-    rvol = movstd(tbl.PCT_CHG,[19,0],'Endpoints','fill'); % 这是日期对应前20个工作日的波动率
-    tbl.rvol = rvol * sqrt(252);
+    rvol20 = movstd(tbl.PCT_CHG,[19,0],'Endpoints','fill'); % 这是日期对应前20个工作日的波动率
+    tbl.rvol20 = rvol20 * sqrt(252);
     
-    rturn = movsum(tbl.FREE_TURN_N,[19,0],'Endpoints','fill');
-    tbl.rturn = rturn;
+    rvol60 = movstd(tbl.PCT_CHG,[59,0],'Endpoints','fill');
+    tbl.rvol60 = rvol60 * sqrt(252);
+    
+    rturn20 = movsum(tbl.FREE_TURN_N,[19,0],'Endpoints','fill');
+    tbl.rturn20 = rturn20;
+    
+    rturn60 = movsum(tbl.FREE_TURN_N,[59,0],'Endpoints','fill');
+    tbl.rturn60 = rturn60;
     
     reb = find_month_dates(5,tbl.times,'last');
     
