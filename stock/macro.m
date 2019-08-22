@@ -1,7 +1,9 @@
-function [ output_args ] = macro( input_args )
-%MACRO 此处显示有关此函数的摘要
-%   此处显示详细说明
-     [w_edb_data,w_edb_codes,w_edb_fields,w_edb_times,w_edb_errorid,w_edb_reqid]=w.edb('M0001385','2002-06-09','2019-08-09');
+function [macro_data,macro_times] = macro()
+% 读取宏观数据
+
+    w = windmatlab;
+    % CPI,PPI,国债5y,国债1y,M2,M1
+    [macro_data,~,~,macro_times,~,~]=w.edb('M0000612,M0001227,S0059747,S0059744,M0001385,M0001383','2002-06-09','2019-08-09','Fill=Previous');
 
 end
 

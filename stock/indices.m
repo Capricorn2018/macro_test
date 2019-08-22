@@ -11,6 +11,7 @@ function [ output_args ] = indices()
     %[w_wsd_data_7,w_wsd_codes_7,w_wsd_fields_7,w_wsd_times,w_wsd_errorid,w_wsd_reqid]=w.wsd('000852.SH','close,amt,pct_chg,turn,free_turn_n','2019-07-08','2019-08-06');
 
     [data,~,fields,times,~,~]=w.wsd('000300.SH','close,amt,pct_chg,turn,free_turn_n','2000-01-01','2019-08-06');
+    %[w_wsd_data,w_wsd_codes,w_wsd_fields,w_wsd_times,w_wsd_errorid,w_wsd_reqid]=w.wsd('399300.SZ','pe_ttm,est_peg,roe_avg,roa,netprofitmargin,grossprofitmargin,expensetosales,operateexpensetogr,ocftosales,debttoassets,deducteddebttoassets2,current,quick,invturndays,arturndays,netturndays,yoy_or,yoynetprofit,yoyocf,yoyroe,yoyassets,yoyequity,or_ttm2,profit_ttm2,operatecashflow_ttm2,cashflow_ttm2,extraordinary,deductedprofit,qfa_roe,qfa_roa,qfa_netprofitmargin,qfa_grossprofitmargin,qfa_saleexpensetogr,qfa_yoysales,qfa_cgrsales,qfa_yoyprofit,qfa_cgrprofit,qfa_yoyocf,or_ttm,profit_ttm,operatecashflow_ttm,cashflow_ttm','2005-01-01','2019-08-19','rptYear=2019','unit=1','Fill=Previous');
     
     tbl = array2table(data,'VariableNames',fields);
     tbl.times = times;
