@@ -1,11 +1,11 @@
 start_dt = '1990-01-01';
-end_dt = '2019-08-20';
+end_dt = '2019-08-26';
 file = 'D:/Projects/macro_test/data.mat';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2019-08-20'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2019-08-26'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,reb);
 
 factor = load_factor(file,reb);
@@ -35,6 +35,8 @@ r0 = tbl.CBA02511_lag3d;
 r1 = tbl.CBA02521_lag3d;
 r5 = tbl.CBA02531_lag3d;
 r10 = tbl.CBA02551_lag3d;
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -73,7 +75,7 @@ signal_sprd710 = roll_signal(sprd710,40,0.5);
 [r_sprd710,alpha_sprd710] = long_short(r_long,r_short,signal_sprd710);
 
 signal_AAA = roll_signal(sprdAAA,40,0.5);
-[r_AAA,alpha_AAA] = long_short(r_long,r_short,signalAAA);
+[r_AAA,alpha_AAA] = long_short(r_long,r_short,signal_AAA);
 
 signal_curv = roll_signal(curv1510,40,0.5);
 [r_curv,alpha_curve] = long_short(r_long,r_short,signal_curv);
@@ -99,6 +101,10 @@ signal_fin = roll_signal(sprdfin,40,0.5);
 
 signal_stk3m = stk3m < 0; 
 [r_stk, alpha_stk] = long_short(r_long,r_short,signal_stk3m);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 
 
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
@@ -141,6 +147,11 @@ position = (signal_found) * active * 1/3 + (signal_prev) * active * 1/3 + (signa
 r_all = r_money * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
 alpha = r_all - r_base;
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%% 收益图表 %%%%%%%%%%%%%%%%%%%%
 
 nav = [1;cumprod(1+r_all)];
 nav_short = [1;cumprod(1+r1)];
