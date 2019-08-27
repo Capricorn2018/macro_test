@@ -122,11 +122,11 @@ r_reverse(signal_reverse==1) = r_long(signal_reverse==1);
 
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 r_found2 = r_base;
-signal_found2 = (signal_found==1 & signal_sprd710==1);
+signal_found2 = (signal_found==1 & signal_sprd710==1); % 这个策略胜率75%左右
 r_found2(signal_found2==1) = r_long(signal_found2==1);
 
 r_found3 = r_base;
-signal_found3 = (signal_found==1 & signal_AAA==1);
+signal_found3 = (signal_found==1 & signal_AAA==1); %这个策略胜率在79%左右
 r_found3(signal_found3==1) = r_long(signal_found3==1);
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
