@@ -118,6 +118,8 @@ r_reverse = r_base;
 signal_reverse = (signal_found==1) & (signal_mom6m==1); % 曲线+反转策略
 r_reverse(signal_reverse==1) = r_long(signal_reverse==1);
 
+
+
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 r_found2 = r_base;
 signal_found2 = (signal_found==1 & signal_sprd710==1);
