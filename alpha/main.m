@@ -47,8 +47,10 @@ stk3m = tbl.stk3m;
 
 sprd31 = tbl.mean_sprd31;
 sprd51 = tbl.mean_sprd51;
+sprd710 = tbl.mean_sprd710;
 sprdfin = tbl.mean_sprdfin;
 sprdliq = tbl.mean_sprdliq;
+sprdAAA = tbl.mean_sprdAAA;
 
 curv135 = tbl.mean_curve135;
 curv1510 = tbl.mean_curv1510;
@@ -66,6 +68,12 @@ r_mid = tbl.CBA02531_lag3d;
 
 signal_sprd = roll_signal(sprd51,40,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
+
+signal_sprd710 = roll_signal(sprd710,40,0.5);
+[r_sprd710,alpha_sprd710] = long_short(r_long,r_short,signal_sprd710);
+
+signal_AAA = roll_signal(sprdAAA,40,0.5);
+[r_AAA,alpha_AAA] = long_short(r_long,r_short,signalAAA);
 
 signal_curv = roll_signal(curv1510,40,0.5);
 [r_curv,alpha_curve] = long_short(r_long,r_short,signal_curv);
@@ -102,15 +110,24 @@ r_money = r_base;
 signal_money = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,或者从1~3换到货币
 r_money(signal_money==1) = r0(signal_money==1);
 
-
 r_found = r_base;
 signal_found = (signal_curv==1 &  signal_sprd==1);
 r_found(signal_found==1) = r_long(signal_found==1);
 
-
 r_reverse = r_base;
 signal_reverse = (signal_found==1) & (signal_mom6m==1); % 曲线+反转策略
 r_reverse(signal_reverse==1) = r_long(signal_reverse==1);
+
+%%%%%%%%%% 备选做多策略 %%%%%%%%%%
+r_found2 = r_base;
+signal_found2 = (signal_found==1 & signal_sprd710==1);
+r_found2(signal_found2==1) = r_long(signal_found2==1);
+
+r_found3 = r_base;
+signal_found3 = (signal_found==1 & signal_AAA==1);
+r_found3(signal_found3==1) = r_long(signal_found3==1);
+%%%%%%%%%% 备选做多策略 %%%%%%%%%%
+
 
 r_prev = r_base;
 signal_prev = (signal_stk3m==1 & signal_mom==1);

@@ -14,12 +14,12 @@ function [factors,assets] = wind_data(filename,start_dt,end_dt)
     factors.date = edb_times;
     factors.sprd31 = edb.S0059746 - edb.S0059744;
     factors.sprd51 = edb.S0059747 - edb.S0059744;
-    factors.sprd710 = edb.S0059748 - edb.S0059749; % 国债7-10，这个跟5-1结合也是个不错的做多指标
+    factors.sprd710 = edb.S0059748 - edb.S0059749; % 国债7-10，这个跟5-1和1510结合起来能提高一点点做多的胜率
     factors.curv1510 = 2 * edb.S0059747 - edb.S0059749 - edb.S0059744;
     factors.curve135 = 2 * edb.S0059746 - edb.S0059747 - edb.S0059744;
     factors.sprdfin = edb.M1004271 - edb.S0059749;    
     factors.sprdliq = edb.M1007675 - edb.M1004271;
-    factors.sprdAAA = edb.S0059739 - edb.M1004267; % 信用利差需要试，好像是个很好的做空指标
+    factors.sprdAAA = edb.S0059739 - edb.M1004267; % 信用利差，跟5-1和1510结合起来也能提高做多胜率
     
     names = {'date','CBA02511','CBA02521','CBA02531','CBA02541','CBA02551','HS300','CBA01921'};
     assets = array2table([wsd_times,wsd_data],'VariableNames',names);
