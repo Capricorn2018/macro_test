@@ -54,6 +54,9 @@ sprdfin = tbl.mean_sprdfin;
 sprdliq = tbl.mean_sprdliq;
 sprdAAA = tbl.mean_sprdAAA;
 
+% 利率互换是月度数据,避免数据偷看,用前一个月的数据
+sprdswap = [NaN;tbl.sprdswap(1:end-1)];
+
 curv135 = tbl.mean_curve135;
 curv1510 = tbl.mean_curv1510;
 
@@ -71,11 +74,14 @@ r_mid = tbl.CBA02531_lag3d;
 signal_sprd = roll_signal(sprd51,40,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
 
-signal_sprd710 = roll_signal(sprd710,40,0.5);
+signal_sprd710 = roll_signal(sprd710,40,0.5); % 国债7-10，这个跟5-1和1510结合起来能提高一点点做多的胜率
 [r_sprd710,alpha_sprd710] = long_short(r_long,r_short,signal_sprd710);
 
-signal_AAA = roll_signal(sprdAAA,40,0.5);
+signal_AAA = roll_signal(sprdAAA,40,0.5); % 信用利差，跟5-1和1510结合起来也能提高做多胜率
 [r_AAA,alpha_AAA] = long_short(r_long,r_short,signal_AAA);
+
+signal_swap = roll_signal(sprdswap,40,0.5); % SHIBOR利率互换与FR007利率互换利差,代表流动性溢价
+[r_swap,alpha_swap] = long_short(r_long,r_short,signal_swap);
 
 signal_curv = roll_signal(curv1510,40,0.5);
 [r_curv,alpha_curve] = long_short(r_long,r_short,signal_curv);
@@ -134,6 +140,10 @@ r_found2(signal_found2==1) = r_long(signal_found2==1);
 r_found3 = r_base;
 signal_found3 = (signal_found==1 & signal_AAA==1); %这个策略胜率在79%左右
 r_found3(signal_found3==1) = r_long(signal_found3==1);
+
+r_found4 = r_base;
+signal_found4 = (signal_found==1 & signal_swap==1); % 这个策略胜率在87.5%左右,不过信号少需要观察
+r_found4(signal_found4==1) = r_long(signal_found4==1);
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
 

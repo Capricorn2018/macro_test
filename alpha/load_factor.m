@@ -1,6 +1,5 @@
 
 function result = load_factor(filename,reb)
-% 此处显示有关此函数的摘要
 %   reb: rebalance_dates, 这里就是用load_assets里面的date就行
     
 %     raw = readtable(filename);
