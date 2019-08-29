@@ -15,4 +15,3 @@ function [macro_data,macro_times,yield_data,yield_times] = macro(start_dt,end_dt
 
     
 end
-
