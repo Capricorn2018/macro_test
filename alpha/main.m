@@ -152,7 +152,7 @@ signal_prev = (signal_stk3m==1 & signal_mom==1);
 r_prev(signal_prev==1) = r_long(signal_prev==1);
 
 active = 0.6; % 主动长债仓位限制
-signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev);
+signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_money,signal_found2,signal_found3,signal_found4);
 position = (signal_found) * active * 1/3 + (signal_prev) * active * 1/3 + (signal_reverse) * active * 1/3;
 r_all = r_money * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
 alpha = r_all - r_base;
