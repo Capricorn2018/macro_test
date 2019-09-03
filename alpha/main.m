@@ -133,17 +133,21 @@ r_reverse(signal_reverse==1) = r_long(signal_reverse==1);
 
 
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
-r_found2 = r_base;
-signal_found2 = (signal_found==1 & signal_sprd710==1); % 这个策略胜率75%左右
+r_found2 = r_base;  % 这个策略胜率75%左右
+signal_found2 = (signal_found==1 & signal_sprd710==1); 
 r_found2(signal_found2==1) = r_long(signal_found2==1);
 
-r_found3 = r_base;
-signal_found3 = (signal_found==1 & signal_AAA==1); %这个策略胜率在79%左右
+r_found3 = r_base;  %这个策略胜率在79%左右
+signal_found3 = (signal_found==1 & signal_AAA==1); 
 r_found3(signal_found3==1) = r_long(signal_found3==1);
 
-r_found4 = r_base;
-signal_found4 = (signal_found==1 & signal_swap==1); % 这个策略胜率在87.5%左右,不过信号少需要观察
+r_found4 = r_base;  % 这个策略胜率在87.5%左右,不过信号少需要观察
+signal_found4 = (signal_found==1 & signal_swap==1); 
 r_found4(signal_found4==1) = r_long(signal_found4==1);
+
+r_money2 = r_base;  % 备选做空策略，这个策略的做空长债胜率在67.5%附近
+signal_money2 = (signal_money==1 & signal_AAA==-1);
+r_money2(signal_money2==1) = r0(signal_money2==1);
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
 
