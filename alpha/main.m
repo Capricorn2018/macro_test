@@ -21,7 +21,7 @@ tbl.mom6m = [nan(5,1); movsum(tbl.mom1m,6,'Endpoints','discard')];
 tbl.stk1m = [NaN;tbl.HS300(1:end-1)];
 tbl.stk3m = [nan(2,1); movsum(tbl.stk1m,3,'Endpoints','discard')];
 
-tbl.curv135_3m = [nan(2,1);movmean(tbl.mean_curve135,3,'Endpoints','discard')];
+tbl.curv135_3m = [nan(2,1);movmean(tbl.mean_curv135,3,'Endpoints','discard')];
 tbl.curv1510_3m = [nan(2,1);movmean(tbl.mean_curv1510,3,'Endpoints','discard')];
 tbl.sprd31_3m = [nan(2,1);movmean(tbl.mean_sprd31,3,'Endpoints','discard')];
 tbl.sprd51_3m = [nan(2,1);movmean(tbl.mean_sprd51,3,'Endpoints','discard')];
@@ -57,7 +57,7 @@ sprdAAA = tbl.mean_sprdAAA;
 % 利率互换是月度数据,避免数据偷看,用前一个月的数据
 sprdswap = [NaN;tbl.sprdswap(1:end-1)];
 
-curv135 = tbl.mean_curve135;
+curv135 = tbl.mean_curv135;
 curv1510 = tbl.mean_curv1510;
 
 sprd31_3m = tbl.sprd31_3m;
@@ -84,7 +84,7 @@ signal_swap = roll_signal(sprdswap,40,0.5); % SHIBOR利率互换与FR007利率互换利差,
 [r_swap,alpha_swap] = long_short(r_long,r_short,signal_swap);
 
 signal_curv = roll_signal(curv1510,40,0.5);
-[r_curv,alpha_curve] = long_short(r_long,r_short,signal_curv);
+[r_curv,alpha_curv] = long_short(r_long,r_short,signal_curv);
 
 signal_curv2 = roll_signal(curv135,40,0.5);
 [r_curv2,alpha_curv2] = long_short(r_long,r_short,signal_curv2);
