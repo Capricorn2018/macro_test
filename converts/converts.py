@@ -18,7 +18,7 @@ class converts:
         self.downCounts = downCounts #下修条款触发日期数
         self.convertPrice = convertPrice #约定转股价格
         self.coupon = coupon #票息期限结构
-        self.finalPay = finalPay #最后赎回价格  
+        self.finalPay = finalPay #最后赎回价格
         
     def simulator(self,S0,randomNumber):
         return 0
