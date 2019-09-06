@@ -20,6 +20,6 @@ function [macro_data,macro_times,yield_data,yield_times] = macro(start_dt,end_dt
     % 后面可以再试一下SEATS的matlab包
     
     % 东证期货的报告里面用了宏观数据的面板数据回归, 用的IVX回归, 下周二可以问问他们咋做的
-
+    
     
 end
