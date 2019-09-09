@@ -67,9 +67,11 @@ curv1510_3m = tbl.curv1510_3m;
 sprdfin_3m = tbl.sprdfin_3m;
 sprdliq_3m = tbl.sprdliq_3m;
 
+% 基准收益
 r_long = tbl.CBA02551_lag3d;
 r_short = tbl.CBA02521_lag3d;
 r_mid = tbl.CBA02531_lag3d;
+r_money = tbl.CBA02511_lag3d;
 
 signal_sprd = roll_signal(sprd51,40,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
@@ -115,12 +117,12 @@ signal_stk3m = stk3m < 0;
 
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 % 基准收益
-r_base = r_short;
+r_base = r_mid;
 
-% 看空时换货币
-r_money = r_base;
-signal_money = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,或者从1~3换到货币
-r_money(signal_money==1) = r0(signal_money==1);
+% 看空时换短债
+r_sell = r_base;
+signal_sell = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,或者从1~3换到货币
+r_sell(signal_money==1) = r_short(signal_money==1);
 
 r_found = r_base;
 signal_found = (signal_curv==1 &  signal_sprd==1);
@@ -130,7 +132,9 @@ r_reverse = r_base;
 signal_reverse = (signal_found==1) & (signal_mom6m==1); % 曲线+反转策略
 r_reverse(signal_reverse==1) = r_long(signal_reverse==1);
 
-
+r_prev = r_base;
+signal_prev = (signal_stk3m==1 & signal_mom==1); % 追涨策略
+r_prev(signal_prev==1) = r_long(signal_prev==1);
 
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 r_found2 = r_base;  % 这个策略胜率75%左右
@@ -145,20 +149,16 @@ r_found4 = r_base;  % 这个策略胜率在87.5%左右,不过信号少需要观察
 signal_found4 = (signal_found==1 & signal_swap==1); 
 r_found4(signal_found4==1) = r_long(signal_found4==1);
 
-r_money2 = r_base;  % 备选做空策略，这个策略的做空长债胜率在67.5%附近
+r_sell2 = r_base;  % 备选做空策略，这个策略的做空长债胜率在67.5%附近
 signal_money2 = (signal_money==1 & signal_AAA==-1);
-r_money2(signal_money2==1) = r0(signal_money2==1);
+r_sell2(signal_money2==1) = r_short(signal_money2==1);
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
-
-r_prev = r_base;
-signal_prev = (signal_stk3m==1 & signal_mom==1);
-r_prev(signal_prev==1) = r_long(signal_prev==1);
 
 active = 0.6; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_money,signal_found2,signal_found3,signal_found4);
 position = (signal_found) * active * 1/3 + (signal_prev) * active * 1/3 + (signal_reverse) * active * 1/3;
-r_all = r_money * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
+r_all = r_sell * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
 alpha = r_all - r_base;
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 
