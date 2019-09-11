@@ -13,17 +13,17 @@ isnum = ~any(isnan(data),2);
 data = [econ(isnum,1),array2table(data(isnum,:))];
 
 start = datenum(2009,1,1);
-bl = data.times >= start;
+bl = data.price_times >= start;
 
-id = 1:length(data.times);
+id = 1:length(data.price_times);
 n_st = min(id(bl));
 
-theta = zeros(length(data.times),1);
-A = zeros(length(data.times),1);
+theta = zeros(length(data.price_times),1);
+A = zeros(length(data.price_times),1);
 pd = makedist('Normal',238,10);
 weight = pdf(pd,1:10000);
 
-for i = n_st:length(data.times)
+for i = n_st:length(data.price_times)
     
     tmp = table2array(data(1:i,2:end));
     
