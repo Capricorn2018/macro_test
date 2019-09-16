@@ -22,7 +22,7 @@
 #INPUT:
 #   yt: a Tx1 vector which is the precticted variable y{t}
 
-#   xt: a Txk reg matrix including the regressors as columns.
+#   xt: a Txkreg matrix including the regressors as columns.
 #
 #   The program automatically includes an intercept in the predictive
 #   regression, so there is no need for a column of 1's.
@@ -40,7 +40,7 @@
 #   Aivx: a 1xkreg vector which is the IVX estimator of A in (1)
 #
 #   Wivx : is a 2x1 vector with the first element being the Wald statistic of
-#          a test for overall sifnificance, whereas the second gives the corresponding p-value (from the
+#          a test for overall significance, whereas the second gives the corresponding p-value (from the
 #          chi-square distribution)
 #
 #   WivxInd: is a 2xkreg matrix
