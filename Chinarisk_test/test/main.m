@@ -2,9 +2,9 @@ clear;clc;
 %%
 cd('D:\Projects\macro_test\Chinarisk_test');
 addpath(genpath(cd));
-d.project_path = 'D:\Projects\Chinarisk_test';
-d.data_path     = 'D:\Projects\Chinarisk_test\data\input'; 
-d.output_path_base   = 'D:\Projects\Chinarisk_test\data\output\base'; 
+d.project_path = 'D:\Projects\macro_test\Chinarisk_test';
+d.data_path     = 'D:\Projects\macro_test\Chinarisk_test\data\input'; 
+d.output_path_base   = 'D:\Projects\macro_test\Chinarisk_test\data\output\base'; 
 d.output_path  = d.output_path_base ;
 %%
 tklist1 = cell2table(  {'eqt','CSI300', '000300.SH','H00300.CSI';...
@@ -19,7 +19,7 @@ tklist1 = cell2table(  {'eqt','CSI300', '000300.SH','H00300.CSI';...
 %% π…∆±’Æ»Ø…Ã∆∑
 p.ticker_list = tklist1;
 p = set_paras(d,p); 
-need_load_data = 0; 
+need_load_data = 1; 
 if need_load_data
     load_data(d,p); 
 end 

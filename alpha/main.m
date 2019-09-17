@@ -117,12 +117,12 @@ signal_stk3m = stk3m < 0;
 
 %%%%%%%%%%%%%%%%%%%% 最终策略 %%%%%%%%%%%%%%%%%%%%
 % 基准收益
-r_base = r_mid;
+r_base = r_short;
 
 % 看空时换短债
 r_sell = r_base;
 signal_sell = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,或者从1~3换到货币
-r_sell(signal_money==1) = r_short(signal_money==1);
+r_sell(signal_sell==1) = r_money(signal_sell==1);
 
 r_found = r_base;
 signal_found = (signal_curv==1 &  signal_sprd==1);
@@ -150,13 +150,13 @@ signal_found4 = (signal_found==1 & signal_swap==1);
 r_found4(signal_found4==1) = r_long(signal_found4==1);
 
 r_sell2 = r_base;  % 备选做空策略，这个策略的做空长债胜率在67.5%附近
-signal_money2 = (signal_money==1 & signal_AAA==-1);
-r_sell2(signal_money2==1) = r_short(signal_money2==1);
+signal_money2 = (signal_sell==1 & signal_AAA==-1);
+r_sell2(signal_money2==1) = r_money(signal_money2==1);
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
 
 active = 0.6; % 主动长债仓位限制
-signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_money,signal_found2,signal_found3,signal_found4);
+signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4);
 position = (signal_found) * active * 1/3 + (signal_prev) * active * 1/3 + (signal_reverse) * active * 1/3;
 r_all = r_sell * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
 alpha = r_all - r_base;
