@@ -13,6 +13,9 @@ function [macro_data,macro_times,yield_data,yield_times] = macro(start_dt,end_dt
     [yield_data,yield_codes,~,yield_times,~,~] = w.edb(['S0059744,S0059746,S0059747,S0059749,',...
                                                 'M1004271,M1007675'],start_dt,end_dt,...
                                                 'Fill=Previous'); 
+                                            
+    [stk_data,stk_codes,~,stk_times,~,~] = w.wsd('000300.SH,000905.SH,HSI.HI,NH0200.NHF',...
+                                            'close',start_dt,end_dt);
     yield_data = array2table(yield_data,'VariableNames',yield_codes);
     
     % 下面可能要做一些预处理, 用原始的收益率数据算一下利差
