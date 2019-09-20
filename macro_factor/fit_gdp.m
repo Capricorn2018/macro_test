@@ -5,9 +5,13 @@ w = windmatlab;
 %  股票和南华工业品指数
 [stk_data,stk_codes,~,stk_times,~,~] = w.wsd('000300.SH,000905.SH,HSI.HI,NH0200.NHF',...
                                                 'close',start_dt,end_dt);
-% 预测平均值：CPI当月同比, 预测平均值：PPI当月同比, GDP现价累计同比, 预测平均值：GDP同比（年）, 70成新建住宅价格指数
-[growth_data,growth_codes,~,growth_times,~,~] = w.edb('M0061676,M0061677,M0001395,M0329172,S2707403',...
+% 预测平均值：CPI当月同比, 预测平均值：PPI当月同比, GDP现价累计同比, 
+% 预测平均值：GDP同比（年）, 70成新建住宅价格指数
+[growth_data,growth_codes,~,growth_times,~,~] ...
+                                = w.edb('M0061676,M0061677,M0001395,M0329172,S2707403',...
                                                         start_dt,end_dt,'Fill=Previous');
+% CRB综合指数
+[crb_data,~,~,crb_times,~,~] = w.edb('S0031505',start_dt,end_dt,'Fill=Previous');
                                                 
  
 x = growth_data(:,3);
