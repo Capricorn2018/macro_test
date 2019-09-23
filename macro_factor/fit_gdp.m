@@ -34,7 +34,7 @@ fcpi = growth_data(:,1);
 fppi = growth_data(:,2);
 
 % gdp surprise
-diff = ngdp - fgdp - fcpi*0.7 - fppi*0.3;
+diff = ngdp - fgdp - fcpi;
 
 % 70城房价指数同比
 house = growth_data(:,5);
