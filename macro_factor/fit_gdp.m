@@ -34,7 +34,7 @@ fcpi = growth_data(:,1);
 fppi = growth_data(:,2);
 
 % gdp surprise
-diff = ngdp - fgdp - fcpi;
+diff = ngdp - fgdp - fcpi*0.7 - fppi*0.3;
 
 % 70城房价指数同比
 house = growth_data(:,5);
@@ -46,7 +46,7 @@ stk(~isnan(idx),:) = stk_data(idx(~isnan(idx)),:);
 rtn = stk(2:end,:)./stk(1:end-1,:) - 1;
 rtn = [nan(1,size(rtn,2));rtn];
 
-rtn = [rtn,house];
+rtn = [rtn(:,[1,4]),house];
 
 % 这里面用到了300,500,恒生, 试了下用一个就行了
 model = fitlm(rtn,diff);
