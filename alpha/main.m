@@ -1,5 +1,5 @@
 start_dt = '1990-01-01';
-end_dt = '2019-09-24';
+end_dt = '2019-10-18';
 file = 'D:/Projects/macro_test/data.mat';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
