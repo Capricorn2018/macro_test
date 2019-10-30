@@ -76,7 +76,7 @@ r_money = tbl.CBA02511_lag3d;
 signal_sprd = roll_signal(sprd51,40,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
 
-signal_sprd51swap = roll_sginal(sprd51swap,40,0.5);
+signal_sprd51swap = roll_signal(sprd51swap,40,0.5);
 [r_sprd51swap,alpha_sprd51swap] = long_short(r_long,r_short,signal_sprd51swap);
 
 signal_sprd710 = roll_signal(sprd710,40,0.5); % 国债7-10，这个跟5-1和1510结合起来能提高一点点做多的胜率
