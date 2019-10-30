@@ -1,11 +1,11 @@
 start_dt = '1990-01-01';
-end_dt = '2019-10-18';
+end_dt = '2019-10-25';
 file = 'D:/Projects/macro_test/data.mat';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2019-09-24'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2019-10-25'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,reb);
 
 factor = load_factor(file,reb);
@@ -75,6 +75,9 @@ r_money = tbl.CBA02511_lag3d;
 
 signal_sprd = roll_signal(sprd51,40,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
+
+signal_sprd51swap = roll_sginal(sprd51swap,40,0.5);
+[r_sprd51swap,alpha_sprd51swap] = long_short(r_long,r_short,signal_sprd51swap);
 
 signal_sprd710 = roll_signal(sprd710,40,0.5); % 国债7-10，这个跟5-1和1510结合起来能提高一点点做多的胜率
 [r_sprd710,alpha_sprd710] = long_short(r_long,r_short,signal_sprd710);
@@ -148,6 +151,10 @@ r_found3(signal_found3==1) = r_long(signal_found3==1);
 r_found4 = r_base;  % 这个策略胜率在87.5%左右,不过信号少需要观察
 signal_found4 = (signal_found==1 & signal_swap==1); 
 r_found4(signal_found4==1) = r_long(signal_found4==1);
+
+r_found5 = r_base; % 这个策略胜率在67.5%附近
+signal_found5 = (signal_sprd51swap==1 & signal_curv==1); % 国债5Y减IRS1Y
+r_found5(signal_found5==1) = r_long(signal_found5==1);
 
 r_sell2 = r_base;  % 备选做空策略，这个策略的做空长债胜率在67.5%附近
 signal_money2 = (signal_sell==1 & signal_AAA==-1);
