@@ -49,6 +49,7 @@ stk3m = tbl.stk3m;
 
 sprd31 = tbl.mean_sprd31;
 sprd51 = tbl.mean_sprd51;
+sprd51_swap = tbl.mean_sprd51swap;
 sprd710 = tbl.mean_sprd710;
 sprdfin = tbl.mean_sprdfin;
 sprdliq = tbl.mean_sprdliq;
