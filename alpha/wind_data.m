@@ -16,7 +16,7 @@ function [factors,assets] = wind_data(filename,start_dt,end_dt)
     factors.date = edb_times;
     factors.sprd31 = edb.S0059746 - edb.S0059744;
     factors.sprd51 = edb.S0059747 - edb.S0059744;
-    factors.sprd710 = edb.S0059748 - edb.S0059749; % 国债7-10，这个跟5-1和1510结合起来能提高一点点做多的胜率
+    factors.sprd710 = edb.S0059748 - edb.S0059749; % 国债7-10，跟5-1和1510结合起来能提高一点点做多的胜率
     factors.curv1510 = 2 * edb.S0059747 - edb.S0059749 - edb.S0059744;
     factors.curv135 = 2 * edb.S0059746 - edb.S0059747 - edb.S0059744;
     factors.curv2510 = 2* edb.S0059746 - edb.S0059747 - edb.S0059745;
@@ -26,6 +26,7 @@ function [factors,assets] = wind_data(filename,start_dt,end_dt)
     
     factors.sprdswap = edb.M0048517 - edb.M0048504; % SHIBOR与FR007利率互换1Y利差, 跟5-1和1510结合起来可以提高做多胜率
     factors.sprd51swap = edb.S0059747 - edb.M0048486; % 5年国债减FR007互换1Y
+    factors.bondswap = edb.M0048486 - edb.S0059744; % swap1Y减去国债1y
     
     names = {'date','CBA02511','CBA02521','CBA02531','CBA02541','CBA02551','HS300','CBA01921'};
     assets = array2table([wsd_times,wsd_data],'VariableNames',names);

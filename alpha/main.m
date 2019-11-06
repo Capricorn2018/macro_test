@@ -141,15 +141,15 @@ signal_prev = (signal_stk3m==1 & signal_mom==1); % 追涨策略
 r_prev(signal_prev==1) = r_long(signal_prev==1);
 
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
-r_found2 = r_base;  % 这个策略胜率75%左右
+r_found2 = r_base;  % 这个策略胜率75%左右, 7Y-10Y倒挂时相对收益更好
 signal_found2 = (signal_found==1 & signal_sprd710==1); 
 r_found2(signal_found2==1) = r_long(signal_found2==1);
 
-r_found3 = r_base;  %这个策略胜率在79%左右
+r_found3 = r_base;  % 这个策略胜率在79%左右, AAA利差过高才做多
 signal_found3 = (signal_found==1 & signal_AAA==1); 
 r_found3(signal_found3==1) = r_long(signal_found3==1);
 
-r_found4 = r_base;  % 这个策略胜率在87.5%左右,不过信号少需要观察
+r_found4 = r_base;  % 这个策略胜率在87.5%左右,swap1Y-bond1Y过高做多，不过信号少需要观察
 signal_found4 = (signal_found==1 & signal_swap==1); 
 r_found4(signal_found4==1) = r_long(signal_found4==1);
 
@@ -157,14 +157,14 @@ r_found5 = r_base; % 这个策略胜率在67.5%附近
 signal_found5 = (signal_sprd51swap==1 & signal_curv==1); % 国债5Y减IRS1Y
 r_found5(signal_found5==1) = r_long(signal_found5==1);
 
-r_sell2 = r_base;  % 备选做空策略，这个策略的做空长债胜率在67.5%附近
+r_sell2 = r_base;  % 备选做空策略，AAA利差过低做空，这个策略的做空长债胜率在67.5%附近
 signal_money2 = (signal_sell==1 & signal_AAA==-1);
 r_sell2(signal_money2==1) = r_money(signal_money2==1);
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
 
 active = 0.6; % 主动长债仓位限制
-signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4);
+signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_sell2);
 position = (signal_found) * active * 1/3 + (signal_prev) * active * 1/3 + (signal_reverse) * active * 1/3;
 r_all = r_sell * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
 alpha = r_all - r_base;
