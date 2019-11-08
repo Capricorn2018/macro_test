@@ -54,6 +54,7 @@ sprd710 = tbl.mean_sprd710;
 sprdfin = tbl.mean_sprdfin;
 sprdliq = tbl.mean_sprdliq;
 sprdAAA = tbl.mean_sprdAAA;
+taxfin = tbl.mean_taxfin;
 
 % ÀûÂÊ»¥»»ÊÇÔÂ¶ÈÊı¾İ,±ÜÃâÊı¾İÍµ¿´,ÓÃÇ°Ò»¸öÔÂµÄÊı¾İ
 sprdswap = [NaN;tbl.sprdswap(1:end-1)];
@@ -111,6 +112,9 @@ signal_mom6m = mom6m<0; % ×¢ÒâÕâÀïÊÇ·´×ª£¬²»ÊÇ¶¯Á¿£¡
 signal_fin = roll_signal(sprdfin,40,0.5);
 [r_fin,alpha_fin] = long_short(r_long,r_short,signal_fin);
 
+signal_tax = roll_signal(taxfin,40,0.5);
+[r_tax,alpha_tax] = long_short(r_long,r_short,signal_tax);
+
 signal_stk3m = stk3m < 0; 
 [r_stk, alpha_stk] = long_short(r_long,r_short,signal_stk3m);
 
@@ -153,20 +157,33 @@ r_found4 = r_base;  % Õâ¸ö²ßÂÔÊ¤ÂÊÔÚ87.5%×óÓÒ,swap1Y-bond1Y¹ı¸ß×ö¶à£¬²»¹ıĞÅºÅÉÙĞ
 signal_found4 = (signal_found==1 & signal_swap==1); 
 r_found4(signal_found4==1) = r_long(signal_found4==1);
 
-r_found5 = r_base; % Õâ¸ö²ßÂÔÊ¤ÂÊÔÚ67.5%¸½½ü
+r_found5 = r_base; % Õâ¸ö²ßÂÔÊ¤ÂÊÔÚ67.5%¸½½ü, ÓÃ¹úÕ®5Y - IRS1Y´úÌæ¹úÕ®ÆÚÏŞÀû²î×÷ÎªĞÅºÅ
 signal_found5 = (signal_sprd51swap==1 & signal_curv==1); % ¹úÕ®5Y¼õIRS1Y
 r_found5(signal_found5==1) = r_long(signal_found5==1);
+
+r_found6 = r_base; % Õâ¸ö²ßÂÔÊ¤ÂÊ´óÓÚ80%, ÔÚ»ù´¡²ßÂÔµÄ»ù´¡ÉÏ¼ÓÈë¹ú¿ªÒşº¬Ë°ÂÊµÄÒòËØ, µ«ÊÇĞÅºÅºÜÉÙ
+signal_found6 = (signal_found==1 & signal_tax==1);
+r_found6(signal_found6==1) = r_long(signal_found6==1);
 
 r_sell2 = r_base;  % ±¸Ñ¡×ö¿Õ²ßÂÔ£¬AAAÀû²î¹ıµÍ×ö¿Õ£¬Õâ¸ö²ßÂÔµÄ×ö¿Õ³¤Õ®Ê¤ÂÊÔÚ67.5%¸½½ü
 signal_money2 = (signal_sell==1 & signal_AAA==-1);
 r_sell2(signal_money2==1) = r_money(signal_money2==1);
 %%%%%%%%%% ±¸Ñ¡×ö¶à²ßÂÔ %%%%%%%%%%
 
+% ÓÃÒşº¬Ë°ÂÊ×÷ÎªÅâÂÊÖ¸±ê
+max = 1;
+active = ones(length(taxfin),1) * max;
+for i = 40:length(taxfin)
+    if taxfin(i) < median(taxfin(1:i))
+        active(i) = 0.5 * active(i);
+    end
+end
 
-active = 0.6; % Ö÷¶¯³¤Õ®²ÖÎ»ÏŞÖÆ
+%active = 0.6; % Ö÷¶¯³¤Õ®²ÖÎ»ÏŞÖÆ
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_money2);
-position = (signal_found) * active * 1/3 + (signal_prev) * active * 1/3 + (signal_reverse) * active * 1/3;
-r_all = r_sell * (1-active) + r_found * active * 1/3 + r_prev * active * 1/3 + r_reverse * active * 1/3 ;
+position = (signal_found) .* active * 1/3 + (signal_prev) .* active * 1/3 + (signal_reverse) .* active * 1/3;
+%r_all = r_sell .* (1-active) + r_found .* active * 1/3 + r_prev .* active * 1/3 + r_reverse .* active * 1/3 ;
+r_all = r_base .* (1-active) + r_found .* active * 1/3 + r_prev .* active * 1/3 + r_reverse .* active * 1/3 ;
 alpha = r_all - r_base;
 %%%%%%%%%%%%%%%%%%%% ×îÖÕ²ßÂÔ %%%%%%%%%%%%%%%%%%%%
 
