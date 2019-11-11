@@ -25,7 +25,7 @@ factors.fwd4y5y = 5*edb.M1001106 - 4*edb.M1001105; % 4Y~5Y的远期利率
 names = {'date','CBA02511','CBA02521','CBA02531','CBA02541','CBA02551'};
 assets = array2table([wsd_times,wsd_data],'VariableNames',names);
 
-save(filename,'assets','factors');                                   
+save(file,'assets','factors');                                   
 
 reb = get_dates(file,5,'last');
 
@@ -44,7 +44,7 @@ r5 = tbl.CBA02531_lag3d; % 3~5
 r10 = tbl.CBA02551_lag3d; % 7~10
 
 yt = r5-r1;
-xt = tbl(:,['spot1y','fwd1y2y','fwd2y3y','fwd3y4y','fwd4y5y']);
+xt = tbl(:,{'spot1y','fwd1y2y','fwd2y3y','fwd3y4y','fwd4y5y'});
 
 % 下面这个是东方金工给我的那个py的函数, 输出怎么用我还没有太搞清楚
 % ivxlh(yt,xt,1);
