@@ -46,7 +46,8 @@ r10 = tbl.CBA02551_lag3d; % 7~10
 yt = r5-r1;
 xt = tbl(:,['spot1y','fwd1y2y','fwd2y3y','fwd3y4y','fwd4y5y']);
 
-% ivxlh(yt,xt,3);
+% 下面这个是东方金工给我的那个py的函数, 输出怎么用我还没有太搞清楚
+% ivxlh(yt,xt,1);
                                             
 
 
