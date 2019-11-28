@@ -5,7 +5,7 @@ file = 'D:/Projects/macro_test/data.mat';
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2019-11-26'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2019-11-25'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,reb);
 
 factor = load_factor(file,reb);
@@ -166,8 +166,8 @@ signal_found6 = (signal_found==1 & signal_tax==1);
 r_found6(signal_found6==1) = r_long(signal_found6==1);
 
 r_sell2 = r_base;  % 备选做空策略，AAA利差过低做空，这个策略的做空长债胜率在67.5%附近
-signal_money2 = (signal_sell==1 & signal_AAA==-1);
-r_sell2(signal_money2==1) = r_money(signal_money2==1);
+signal_sell2 = (signal_sell==1 & signal_AAA==-1);
+r_sell2(signal_sell2==1) = r_money(signal_sell2==1);
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
 % 用隐含税率作为赔率指标
@@ -180,7 +180,7 @@ for i = 40:length(taxfin)
 end
 
 %active = 0.6; % 主动长债仓位限制
-signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_money2);
+signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_sell2);
 position = (signal_found) .* active * 1/3 + (signal_prev) .* active * 1/3 + (signal_reverse) .* active * 1/3;
 %r_all = r_sell .* (1-active) + r_found .* active * 1/3 + r_prev .* active * 1/3 + r_reverse .* active * 1/3 ;
 r_all = r_base .* (1-active) + r_found .* active * 1/3 + r_prev .* active * 1/3 + r_reverse .* active * 1/3 ;
