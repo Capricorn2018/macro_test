@@ -16,7 +16,7 @@ last6m = datemnth(last_day,-6,0,0,0);
 last1y = datemnth(last_day,-12,0,0,0);
 last10y = datemnth(last_day,-120,0,0,0);
 
-yr_st = datenum(year(last_day),1,);
+yr_st = datenum(year(last_day),1);
 
 data_fill(:,9) = data_fill(:,2) - data_fill(:,1);
 data_fill(:,10) = data_fill(:,9) - data_fill(:,10);
