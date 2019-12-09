@@ -2,7 +2,7 @@
 % 日本国债10Y, 德国国债10Y, 英国国债10Y, 中票AAA 5Y, 中国国债5Y 
 [data,codes,~,times,~,~] = w.edb(['M0048486,M0048499,S0059749,G0000891,G0005428,',...
                                     'G1235664,G0008068,G0006353,S0059739,S0059747'],...
-                                    '2009-01-01','2019-12-03');4
+                                    '2009-01-01','2019-12-03');
 [data_fill,~,~,~,~,~] = w.edb(['M0048486,M0048499,S0059749,G0000891,G0005428,',...
                                     'G1235664,G0008068,G0006353,S0059739,S0059747'],...
                                     '2009-01-01','2019-12-03',...
@@ -16,17 +16,19 @@ last6m = datemnth(last_day,-6,0,0,0);
 last1y = datemnth(last_day,-12,0,0,0);
 last10y = datemnth(last_day,-120,0,0,0);
 
-yr_st = datenum(year(last_day),1);
+yr_st = datenum(year(last_day),1,1);
 
-data_fill(:,9) = data_fill(:,2) - data_fill(:,1);
 data_fill(:,10) = data_fill(:,9) - data_fill(:,10);
+data_fill(:,9) = data_fill(:,2) - data_fill(:,1);
 
+p5d = data_fill((end-4):end,:);
 p1m = data_fill(times>=max(times(times<=last1m)),:);
 p3m = data_fill(times>=max(times(times<=last3m)),:);
 p6m = data_fill(times>=max(times(times<=last6m)),:);
 p1y = data_fill(times>=max(times(times<=last1y)),:);
 pytd = data_fill(times>=max(times(times<=yr_st)),:);
 
+diff5d = p5d(end,:) - p5d(1,:);
 diff1m = p1m(end,:) - p1m(1,:);
 diff3m = p3m(end,:) - p3m(1,:);
 diff6m = p6m(end,:) - p6m(1,:);
@@ -49,13 +51,19 @@ jap10y = p10y(:,6); x = find_last(jap10y); z(6) = (x-mean(jap10y,'omitnan'))/std
 ger10y = p10y(:,7); x = find_last(ger10y); z(7) = (x-mean(ger10y,'omitnan'))/std(ger10y,'omitnan');
 bri10y = p10y(:,8); x = find_last(bri10y); z(8) = (x-mean(bri10y,'omitnan'))/std(bri10y,'omitnan');
 
-result = nan(10,6);
-result(:,1) = diff1m';
-result(:,2) = diff3m';
-result(:,3) = diff6m';
-result(:,4) = diff1y';
-result(:,5) = diffytd';
-result(:,6) = z;
+result = nan(10,7);
+result(:,1) = diff5d';
+result(:,2) = diff1m';
+result(:,3) = diff3m';
+result(:,4) = diff6m';
+result(:,5) = diff1y';
+result(:,6) = diffytd';
+result(:,7) = z;
+
+row = {'irs7d1Y','irs3m1Y','china10y','us10y','tips10y','jap10y','ger10y','bri10y','liqsprd','aaasprd'};
+col = {'r5d','r1m','r3m','r6m','r1y','rytd','zscore'};
+
+result = array2table(result,'VariableNames',col,'RowNames',row);
 
 
 
