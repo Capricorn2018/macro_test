@@ -1,6 +1,5 @@
 function plot_hist(x)
-%HISTOGRAM 此处显示有关此函数的摘要
-%   此处显示详细说明
+% 用x画出分布直方图并且标注出最新一期的所处位置
     y = x(end);
     
     [n,a] = hist(x,50);
