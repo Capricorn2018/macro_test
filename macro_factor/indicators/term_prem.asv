@@ -61,20 +61,20 @@ function res = term_prem(start_dt,end_dt)
     
     figure(3);
     subplot(2,2,1);
-    plot_hist(cdb3y_cdb1y);
-    title('CDB3Y minus CDB1Y histogram');
+    plot_hist(bond3y_bond1y);
+    title('3Y minus BOND1Y histogram');
     subplot(2,2,2);
-    plot(times,cdb3y_cdb1y);
+    plot(times,bond3y_bond1y);
     datetick('x','yyyy','keeplimits');
-    title('CDB3Y minus CDB1Y');
+    title('BOND3Y minus BOND1Y');
     axis tight;
     subplot(2,2,3);
-    plot_hist(cdb5y_cdb1y);
-    title('CDB5Y minus CDB1Y histogram');
+    plot_hist(bond5y_bond1y);
+    title('BOND5Y minus BOND1Y histogram');
     subplot(2,2,4);
-    plot(times,cdb5y_cdb1y);
+    plot(times,bond5y_bond1y);
     datetick('x','yyyy','keeplimits');
-    title('CDB5Y minus CDB1Y');
+    title('BOND5Y minus BOND1Y');
     axis tight;
         
     bond5y_bond3y = bond5y - bond3y; % Æï³Ë
@@ -88,46 +88,10 @@ function res = term_prem(start_dt,end_dt)
     bond30y_bond1y = bond30y - bond1y; % ³¬³¤Õ®Òç¼Û
     bond30y_bond10y = bond30y - bond10y;
     cdb20y_cdb1y = cdb20y - cdb1y;
-    cdb20y_cdb10y = cdb20y - cdb10y;
-    
-    figure(3);
-    subplot(2,2,1);
-    plot_hist(bond30y_bond10y);
-    title('BOND30Y minus BOND10Y histogram');
-    subplot(2,2,2);
-    plot(times,bond30y_bond10y);
-    datetick('x','yyyy','keeplimits');
-    title('BOND30Y minus BOND10Y');
-    axis tight;
-    subplot(2,2,3);
-    plot_hist(cdb20y_cdb10y);
-    title('CDB20Y minus CDB1Y histogram');
-    subplot(2,2,4);
-    plot(times,cdb20y_cdb10y);
-    datetick('x','yyyy','keeplimits');
-    title('CDB20Y minus CDB1Y');
-    axis tight;    
+    cdb20y_cdb10y = cdb20y - cdb10y;    
     
     bond_curv = bond5y * 2 - bond1y - bond10y; % ÇúÏßÇúÂÊ
     cdb_curv = cdb5y * 2 - cdb1y - cdb10y;
-    
-    figure(4);
-    subplot(2,2,1);
-    plot_hist(bond_curv);
-    title('BOND curvature histogram');
-    subplot(2,2,2);
-    plot(times,bond_curv);
-    datetick('x','yyyy','keeplimits');
-    title('BOND curvature');
-    axis tight;
-    subplot(2,2,3);
-    plot_hist(cdb_curv);
-    title('CDB curvature histogram');
-    subplot(2,2,4);
-    plot(times,cdb_curv);
-    datetick('x','yyyy','keeplimits');
-    title('CDB curvature');
-    axis tight;   
       
     res = table(irs1y_irs3m,irs5y_irs1y,...
                 bond3y_bond1y,bond5y_bond1y,bond10y_bond1y,...
