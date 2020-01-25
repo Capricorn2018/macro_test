@@ -1,5 +1,5 @@
-function [sprd21,sprd31,sprd32,times] =  cdb_sprd(bond_list,start_dt,end_dt)
-% cdb_sprd用来算国开10年新老券利差
+function [sprd21,sprd31,sprd32,times] =  otr_prem(bond_list,start_dt,end_dt)
+% otm_prem用来算国开10年新老券利差
     w = windmatlab;
 
     
