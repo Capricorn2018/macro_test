@@ -77,31 +77,24 @@ function [res,times,cont_list] = basis_prem(start_dt,end_dt)
             ctd_1 = ctd{i,cont_1};
         end
 
-        % 次季合约的当日CTDF券代码
         cont_2 = rk==2;
         if any(cont_2)
             ctd_2 = ctd{i,cont_2};
         end
         
-        % 远季合约的当日CTD券代码
         cont_3 = rk==3;
         if any(cont_3)
             ctd_3 = ctd{i,cont_3};
         end
         
-        % 从当季基差里面读取当日当季CTD的基差
         if ischar(ctd_1)            
             [~,Locb] = ismember(ctd_1,bond_list);
             res(i,cont_1) = basis_1(i,Locb);
         end
-        
-        % 从次季基差里面读取当日次季CTD的基差
         if ischar(ctd_2)            
             [~,Locb] = ismember(ctd_2,bond_list);
             res(i,cont_2) = basis_2(i,Locb);
         end
-        
-        % 从远季基差里面读取当日远季CTD的基差
         if ischar(ctd_3)            
             [~,Locb] = ismember(ctd_3,bond_list);
             res(i,cont_3) = basis_3(i,Locb);
