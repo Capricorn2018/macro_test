@@ -111,6 +111,8 @@ function [res,times,cont_list] = basis_prem(start_dt,end_dt)
 
     times = ctd_times;
     
+    plot_basis(times,last_dt,res,5);
+    
     w.close;
     
 end
@@ -126,4 +128,14 @@ function [rk,b] = active_cont(curr_dt,frst_dt,last_dt)
     
     rk(b) = I;
 
+end
+
+
+function plot_basis(times,last_dt,basis,N)
+    hold on
+    M = length(last_dt) - N + 1;
+    for i=M:length(last_dt)
+        plot(times-last_dt(i),basis(:,i));
+    end
+    hold off
 end
