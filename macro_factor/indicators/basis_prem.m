@@ -111,7 +111,7 @@ function [res,times,cont_list] = basis_prem(start_dt,end_dt)
 
     times = ctd_times;
     
-    plot_basis(times,last_dt,res,5);
+    plot_basis(times,last_dt,res,4);
     
     w.close;
     
