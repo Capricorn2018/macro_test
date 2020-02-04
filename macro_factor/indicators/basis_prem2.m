@@ -23,10 +23,23 @@ function [res,times,cont_list] = basis_prem2(start_dt,end_dt)
     
     % 下面先读取每日的债券净价
     % 然后是每日的期货收盘价
-    % 再然后是对应每个券和每个期货合约的转换因子
+    % 再然后是对应每个券和每个期货合约的转换因子(需要一个一个合约循环)
     % 最后按日循环, 每日先看当天的期货合约是哪三个, 然后读取转换因子、当日净价、和期货收盘价
     % 根据述三种数据算出当日对应的三个期货合约基差最小的券的基差, 作为当日基差
+    [bond,~,~,bond_times,~,~] = w.wsd(bond_list,'net_cnbd',start_dt,end_dt,'credibility=1');
+    [T,~,~,T_times,~,~] = w.wsd(cont_list,'close',start_dt,end_dt);
     
+        
+    for i=1:length(cont_list)
+        [cf,~,~,cf_times,~,~]=w.wset('conversionfactor',['windcode=',cont_list{i}]);
+        % 这里还需要注意跟原先的bond_list取交集之后做成一个matrix
+    end
+    
+    % 按日循环
+    for i = 1:length(ctd_times)
+        % 这里先用active_cont来取每日活跃合约
+        % 然后利用上面的cf和T以及bond来算当日的basis并且取最小的
+    end
     
     w.close;
     
