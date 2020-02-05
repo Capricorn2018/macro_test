@@ -59,17 +59,23 @@ function [res,times,cont_list] = basis_prem2(start_dt,end_dt)
         
         
         % 然后利用上面的cf和T以及bond来算当日的basis并且取最小的
-        cf1 = cf(:,rk==1);
-        basis1 = bond(i,:)' - cf1 .* T(i,rk==1);
-        res(i,rk==1) = min(basis1);
+        if any(rk==1)
+            cf1 = cf(:,rk==1);
+            basis1 = bond(i,:)' - cf1 .* T(i,rk==1);
+            res(i,rk==1) = min(basis1);
+        end
         
-        cf2 = cf(:,rk==2);
-        basis2 = bond(i,:)' - cf2 .* T(i,rk==2);
-        res(i,rk==2) = min(basis2);        
+        if any(rk==2)
+            cf2 = cf(:,rk==2);
+            basis2 = bond(i,:)' - cf2 .* T(i,rk==2);
+            res(i,rk==2) = min(basis2);   
+        end
         
-        cf3 = cf(:,rk==3);
-        basis3 = bond(i,:)' - cf3 .* T(i,rk==3);
-        res(i,rk==3) = min(basis3);        
+        if any(rk==3)
+            cf3 = cf(:,rk==3);
+            basis3 = bond(i,:)' - cf3 .* T(i,rk==3);
+            res(i,rk==3) = min(basis3);        
+        end
         
     end
     
