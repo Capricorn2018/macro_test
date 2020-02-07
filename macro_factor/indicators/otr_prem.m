@@ -19,6 +19,7 @@ function [sprd21,sprd31,sprd32,times] =  otr_prem(start_dt,end_dt)
     sprd32 = nan(size(yield,1),1);
     
     for i=1:size(mat,1)
+        
         mati = mat(i,:);
         [~,I] = maxk(mati,3);
         yieldi = yield(i,I);
@@ -49,8 +50,6 @@ function [sprd21,sprd31,sprd32,times] =  otr_prem(start_dt,end_dt)
     plot(times,sprd32);
     datetick('x','yyyymm','keeplimits');
     title('国开次新券次次新券利差');
-    
-    
     
     w.close;
     
