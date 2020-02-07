@@ -21,94 +21,64 @@ function [res,times,cont_list] = basis_prem(start_dt,end_dt)
     ctd_isch = cellfun(@ischar,ctd);
     bond_list = unique(ctd(ctd_isch));
     
-    % 初始化当季、次季、远季基差和净基差
-    basis_1 = nan(length(ctd_times),length(bond_list));
-    basis_2 = nan(length(ctd_times),length(bond_list));
-    basis_3 = nan(length(ctd_times),length(bond_list));
-    net_basis_1 = nan(length(ctd_times),length(bond_list));
-    net_basis_2 = nan(length(ctd_times),length(bond_list));
-    net_basis_3 = nan(length(ctd_times),length(bond_list));
+    % 下面先读取每日的债券净价
+    % 然后是每日的期货收盘价
+    % 再然后是对应每个券和每个期货合约的转换因子(需要一个一个合约循环)
+    % 最后按日循环, 每日先看当天的期货合约是哪三个, 然后读取转换因子、当日净价、和期货收盘价
+    % 根据述三种数据算出当日对应的三个期货合约基差最小的券的基差, 作为当日基差
+    bond = nan(length(ctd_times),length(bond_list));
+    T = nan(length(ctd_times),length(cont_list));
     
-    % 循环从Wind API读取每个券的当季、次季、远季基差
-    for i=1:length(bond_list)
-        
-        bond = bond_list{i};
-        
-        [data_1,~,~,times_1,~,~] =w.wsd(bond,'tbf_basis,tbf_netbasis',start_dt,end_dt,'contractType=NQ1');        
-        [data_2,~,~,times_2,~,~] =w.wsd(bond,'tbf_basis,tbf_netbasis',start_dt,end_dt,'contractType=NQ2');
-        [data_3,~,~,times_3,~,~] =w.wsd(bond,'tbf_basis,tbf_netbasis',start_dt,end_dt,'contractType=NQ3');
-        
-        if iscell(data_1)
-            data_1 = cell2mat(data_1);
-            data_2 = cell2mat(data_2);
-            data_3 = cell2mat(data_3);
-        end
-        
-        [Lia_1,Locb_1] = ismember(times_1,ctd_times);
-        [Lia_2,Locb_2] = ismember(times_2,ctd_times);
-        [Lia_3,Locb_3] = ismember(times_3,ctd_times);
-        
-        basis_1(Locb_1,i) = data_1(Lia_1,1);
-        basis_2(Locb_2,i) = data_2(Lia_2,1);
-        basis_3(Locb_3,i) = data_3(Lia_3,1);
-        net_basis_1(Locb_1,i) = data_1(Lia_1,2);
-        net_basis_2(Locb_2,i) = data_2(Lia_2,2);
-        net_basis_3(Locb_3,i) = data_3(Lia_3,2);
-        
+    [bond_wind,~,~,bond_times,~,~] = w.wsd(bond_list,'net_cnbd',start_dt,end_dt,'credibility=1');
+    [T_wind,~,~,T_times,~,~] = w.wsd(cont_list,'close',start_dt,end_dt);
+    
+    % 先做时间对齐避免数据不统一
+    [Lia,Locb] = ismember(bond_times,ctd_times);
+    bond(Locb(Locb>0),:) = bond_wind(Lia,:);
+    
+    % 先做时间对齐避免数据不统一
+    [Lia,Locb] = ismember(T_times,ctd_times);
+    T(Locb(Locb>0),:) = T_wind(Lia,:);
+    
+    cf = nan(length(bond_list),length(cont_list));    
+    for i=1:length(cont_list)
+        [cf_i,~,~,~,~,~] = w.wset('conversionfactor',['windcode=',cont_list{i}]);
+        % 这里还需要注意跟原先的bond_list取交集之后做成一个matrix
+        [Lia,Locb] = ismember(cf_i(:,1),bond_list);
+        cf(Locb(Locb>0),i) = cell2mat(cf_i(Lia,2));
     end
-        
-    % 初始化结果
+    
+    
     res = nan(length(ctd_times),length(cont_list));
-        
-    % 将基差矩阵中的结果与当季、次季、远季基差矩阵中的结果匹配
-    for i=1:length(ctd_times)
-        
-        % 每日T合约编号, 当季-1, 次季-2, 远季-3
+    % 按日循环
+    for i = 1:length(ctd_times)
+        % 这里先用active_cont来取每日活跃合约
+        % 每日T合约编号, 当季:1, 次季:2, 远季:3
         curr_dt = ctd_times(i);
         [rk,~] = active_cont(curr_dt,frst_dt,last_dt);
         
-        ctd_1 = NaN;
-        ctd_2 = NaN;
-        ctd_3 = NaN;
         
-        % 当季合约的当日CTD券代码
-        cont_1 = rk==1;
-        if any(cont_1)
-            ctd_1 = ctd{i,cont_1};
-        end
-
-        % 次季合约的当日CTDF券代码
-        cont_2 = rk==2;
-        if any(cont_2)
-            ctd_2 = ctd{i,cont_2};
+        % 然后利用上面的cf和T以及bond来算当日的basis并且取最小的
+        if any(rk==1)
+            cf1 = cf(:,rk==1);
+            basis1 = bond(i,:)' - cf1 .* T(i,rk==1);
+            res(i,rk==1) = min(basis1);
         end
         
-        % 远季合约的当日CTD券代码
-        cont_3 = rk==3;
-        if any(cont_3)
-            ctd_3 = ctd{i,cont_3};
+        if any(rk==2)
+            cf2 = cf(:,rk==2);
+            basis2 = bond(i,:)' - cf2 .* T(i,rk==2);
+            res(i,rk==2) = min(basis2);   
         end
         
-        % 从当季基差里面读取当日当季CTD的基差
-        if ischar(ctd_1)            
-            [~,Locb] = ismember(ctd_1,bond_list);
-            res(i,cont_1) = basis_1(i,Locb);
-        end
-        
-        % 从次季基差里面读取当日次季CTD的基差
-        if ischar(ctd_2)            
-            [~,Locb] = ismember(ctd_2,bond_list);
-            res(i,cont_2) = basis_2(i,Locb);
-        end
-        
-        % 从远季基差里面读取当日远季CTD的基差
-        if ischar(ctd_3)            
-            [~,Locb] = ismember(ctd_3,bond_list);
-            res(i,cont_3) = basis_3(i,Locb);
+        if any(rk==3)
+            cf3 = cf(:,rk==3);
+            basis3 = bond(i,:)' - cf3 .* T(i,rk==3);
+            res(i,rk==3) = min(basis3);        
         end
         
     end
-
+    
     times = ctd_times;
     
     plot_basis(times,last_dt,res,cont_list,length(cont_list));
@@ -140,3 +110,5 @@ function plot_basis(times,last_dt,basis,cont_list,N)
     legend(cont_list(M:length(cont_list)));
     hold off
 end
+
+
