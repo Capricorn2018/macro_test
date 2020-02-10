@@ -11,7 +11,6 @@ function res = credit_prem(start_dt,end_dt)
     [yield,~,~,times,~,~]=w.edb(['M1000517,M1000519,M1000521,',...
                                  'M1000532,M1000534,M1000536,',...
                                  'M1000559,M1000561,M1000563,',...
-                                 'M1000571,M1000573,M1000575,',...
                                  'M1000158,M1000160,M1000162,',...
                                  'M1004263,M1004265,M1004267'],start_dt,end_dt,'Fill=Previous');
                                
@@ -70,6 +69,32 @@ function res = credit_prem(start_dt,end_dt)
     aap1y_aaa1y = aap1y - aaa1y;
     aap3y_aaa3y = aap3y - aaa3y;
     aap5y_aaa5y = aap5y - aaa5y;
+    
+    
+    figure(2);
+    subplot(3,2,1);
+    plot_hist(aaa1y_bond1y);
+    title('AAA1Y minus BOND1Y histogram');
+    subplot(3,2,2);
+    plot(times,aaa1y_bond1y);
+    datetick('x','yyyy','keeplimits');
+    title('AAA1Y minus BOND1Y');
+    axis tight;subplot(3,2,3);
+    plot_hist(aaa3y_bond3y);
+    title('AAA3Y minus BOND3Y histogram');
+    subplot(3,2,4);
+    plot(times,aaa3y_bond3y);
+    datetick('x','yyyy','keeplimits');
+    title('AAA3Y minus BOND3Y');
+    axis tight;subplot(3,2,5);
+    plot_hist(aaa5y_bond5y);
+    title('AAA5Y minus BOND5Y histogram');
+    subplot(3,2,6);
+    plot(times,aaa5y_bond5y);
+    datetick('x','yyyy','keeplimits');
+    title('AAA5y minus BOND5Y');
+    axis tight;
+    
       
     res = table(aaap1y_bond1y, aaap3y_bond3y, aaap5y_bond5y,...
                 aaa1y_bond1y, aaa3y_bond3y, aaa5y_bond5y,...
