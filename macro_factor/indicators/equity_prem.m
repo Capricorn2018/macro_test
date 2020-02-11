@@ -14,36 +14,36 @@ function [res,times] = equity_prem(start_dt,end_dt)
     pe = pe(ia,:);
     yield = yield(ib,:);
     
-    pe300_yield = pe(:,1) - yield;
-    pe500_yield = pe(:,2) - yield;
-    peDY_yield = pe(:,3) - yield;
+    pe300_yield = 1./pe(:,1) - yield;
+    pe500_yield = 1./pe(:,2) - yield;
+    peDY_yield = 1./pe(:,3) - yield;
     
     res = pe - yield;
     
     figure(2);
     subplot(3,2,1);
     plot_hist(pe300_yield);
-    title('CSI300 PE minus BOND10Y histogram');
+    title('CSI300 EP minus BOND10Y histogram');
     subplot(3,2,2);
     plot(times,pe300_yield);
     datetick('x','yyyy','keeplimits');
-    title('CSI300 PE minus BOND10Y');
+    title('CSI300 EP minus BOND10Y');
     axis tight;
     subplot(3,2,3);
     plot_hist(pe500_yield);
-    title('CSI500 PE minus BOND10Y histogram');
+    title('CSI500 EP minus BOND10Y histogram');
     subplot(3,2,4);
     plot(times,pe500_yield);
     datetick('x','yyyy','keeplimits');
-    title('CSI500 PE minus BOND10Y');
+    title('CSI500 EP minus BOND10Y');
     axis tight;
     subplot(3,2,5);
     plot_hist(peDY_yield);
-    title('CSI Dividend PE minus BOND10Y histogram');
+    title('CSI Dividend EP minus BOND10Y histogram');
     subplot(3,2,6);
     plot(times,peDY_yield);
     datetick('x','yyyy','keeplimits');
-    title('CSI Dividend PE minus BOND10Y');
+    title('CSI Dividend EP minus BOND10Y');
     axis tight;
 
     w.close;
