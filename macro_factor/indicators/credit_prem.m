@@ -79,7 +79,8 @@ function res = credit_prem(start_dt,end_dt)
     plot(times,aaa1y_bond1y);
     datetick('x','yyyy','keeplimits');
     title('AAA1Y minus BOND1Y');
-    axis tight;subplot(3,2,3);
+    axis tight;
+    subplot(3,2,3);
     plot_hist(aaa3y_bond3y);
     title('AAA3Y minus BOND3Y histogram');
     subplot(3,2,4);
