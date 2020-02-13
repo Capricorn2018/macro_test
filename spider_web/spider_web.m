@@ -1,4 +1,9 @@
-function res = spider_web()
+function nav = spider_web()
+
+    [signal,times] = sw_signal();
+    
+    start_dt = datestr(times(1),'yyyy-mm-dd');
+    end_dt = datestr(times(end),'yyyy-mm-dd');
 
     w = windmatlab;
 
@@ -11,6 +16,35 @@ function res = spider_web()
     
     % 合约代码表
     cont_list = contracts(:,3);
+    
+    oi = nan(length(times),length(cont_list));
+    open = nan(length(times),length(cont_list));
+    close = nan(length(times),length(cont_list));
+    
+    for i=1:length(cont_list)
+        
+        [T,~,~,Ttimes,~,~] = w.wsd(cont_list{i},'oi,open,close',start_dt,end_dt);
+        [Lia,Locb] = ismember(Ttimes,times);
+        oi(Locb(Locb>0),i) = T(Lia,1);
+        open(Locb(Locb>0),i) = T(Lia,2);
+        close(Locb(Locb>0),i) = T(Lia,3);
+        
+    end
+    
+    nav = ones(length(times),1);
+    
+    for j=2:length(times)
+        
+        [~,k] = max(oi(j,:));
+        if ~isnan(signal)
+            r = (close(j,k) - open(j,k)) * signal(j);
+        else
+            r = 0.;
+        end
+        
+        nav(j) = nav(j-1) * (1+r);
+        
+    end
     
     w.close;
 
