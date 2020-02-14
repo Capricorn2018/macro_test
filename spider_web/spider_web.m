@@ -1,4 +1,4 @@
-function nav = spider_web()
+function [nav,times,signal,open,close] = spider_web()
 
     [signal,times] = sw_signal();
     
@@ -37,7 +37,7 @@ function nav = spider_web()
         
         [~,k] = max(oi(j,:));
         if ~isnan(signal)
-            r = (close(j,k) - open(j,k)) * signal(j);
+            r = (close(j,k) - open(j,k)) * signal(j) / 100;
         else
             r = 0.;
         end
