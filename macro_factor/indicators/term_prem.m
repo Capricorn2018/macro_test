@@ -101,11 +101,11 @@ function res = term_prem(start_dt,end_dt)
     axis tight;
     subplot(2,2,3);
     plot_hist(cdb20y_cdb10y);
-    title('CDB20Y minus CDB1Y histogram');
+    title('CDB20Y minus CDB10Y histogram');
     subplot(2,2,4);
     plot(times,cdb20y_cdb10y);
     datetick('x','yyyy','keeplimits');
-    title('CDB20Y minus CDB1Y');
+    title('CDB20Y minus CDB10Y');
     axis tight;    
     
     bond_curv = bond5y * 2 - bond1y - bond10y; % ÇúÏßÇúÂÊ
