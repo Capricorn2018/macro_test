@@ -42,7 +42,7 @@ function res = term_prem(start_dt,end_dt)
     title('BOND3Y minus BOND1Y histogram');
     subplot(2,2,2);
     plot(times,bond3y_bond1y);
-    datetick('x','yyyy','keeplimits');
+    datetick('x','yyyymm','keeplimits');
     title('BOND3Y minus BOND1Y');
     axis tight;
     subplot(2,2,3);
@@ -50,7 +50,7 @@ function res = term_prem(start_dt,end_dt)
     title('BOND5Y minus BOND1Y histogram');
     subplot(2,2,4);
     plot(times,bond5y_bond1y);
-    datetick('x','yyyy','keeplimits');
+    datetick('x','yyyymm','keeplimits');
     title('BOND5Y minus BOND1Y');
     axis tight;
     
@@ -65,7 +65,7 @@ function res = term_prem(start_dt,end_dt)
     title('CDB3Y minus CDB1Y histogram');
     subplot(2,2,2);
     plot(times,cdb3y_cdb1y);
-    datetick('x','yyyy','keeplimits');
+    datetick('x','yyyymm','keeplimits');
     title('CDB3Y minus CDB1Y');
     axis tight;
     subplot(2,2,3);
@@ -73,7 +73,7 @@ function res = term_prem(start_dt,end_dt)
     title('CDB5Y minus CDB1Y histogram');
     subplot(2,2,4);
     plot(times,cdb5y_cdb1y);
-    datetick('x','yyyy','keeplimits');
+    datetick('x','yyyymm','keeplimits');
     title('CDB5Y minus CDB1Y');
     axis tight;
         
@@ -96,7 +96,7 @@ function res = term_prem(start_dt,end_dt)
     title('BOND30Y minus BOND10Y histogram');
     subplot(2,2,2);
     plot(times,bond30y_bond10y);
-    datetick('x','yyyy','keeplimits');
+    datetick('x','yyyymm','keeplimits');
     title('BOND30Y minus BOND10Y');
     axis tight;
     subplot(2,2,3);
@@ -104,7 +104,7 @@ function res = term_prem(start_dt,end_dt)
     title('CDB20Y minus CDB10Y histogram');
     subplot(2,2,4);
     plot(times,cdb20y_cdb10y);
-    datetick('x','yyyy','keeplimits');
+    datetick('x','yyyymm','keeplimits');
     title('CDB20Y minus CDB10Y');
     axis tight;    
     
@@ -117,7 +117,7 @@ function res = term_prem(start_dt,end_dt)
     title('BOND curvature histogram');
     subplot(2,2,2);
     plot(times,bond_curv);
-    datetick('x','yyyy','keeplimits');
+    datetick('x','yyyymm','keeplimits');
     title('BOND curvature');
     axis tight;
     subplot(2,2,3);
@@ -125,7 +125,7 @@ function res = term_prem(start_dt,end_dt)
     title('CDB curvature histogram');
     subplot(2,2,4);
     plot(times,cdb_curv);
-    datetick('x','yyyy','keeplimits');
+    datetick('x','yyyymm','keeplimits');
     title('CDB curvature');
     axis tight;   
       
