@@ -1,11 +1,11 @@
 start_dt = '1990-01-01';
-end_dt = '2020-01-20';
+end_dt = '2020-03-25';
 file = 'D:/Projects/macro_test/data.mat';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2020-01-20'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2020-03-25'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,reb);
 
 factor = load_factor(file,reb);
@@ -171,15 +171,15 @@ r_sell2(signal_sell2==1) = r_money(signal_sell2==1);
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
 % 用隐含税率作为赔率指标
-max = 1;
-active = ones(length(taxfin),1) * max;
-for i = 40:length(taxfin)
-    if taxfin(i) < median(taxfin(1:i))
-        active(i) = 0.5 * active(i);
-    end
-end
+% max = 1;
+% active = ones(length(taxfin),1) * max;
+% for i = 40:length(taxfin)
+%     if taxfin(i) < median(taxfin(1:i))
+%         active(i) = 0.5 * active(i);
+%     end
+% end
 
-%active = 0.6; % 主动长债仓位限制
+active = 0.6; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_sell2);
 position = (signal_found) .* active * 1/3 + (signal_prev) .* active * 1/3 + (signal_reverse) .* active * 1/3;
 %r_all = r_sell .* (1-active) + r_found .* active * 1/3 + r_prev .* active * 1/3 + r_reverse .* active * 1/3 ;
@@ -230,7 +230,7 @@ legend('boxoff');
 hold off;
 
 figure(2);
-yr = 2005:2019;
+yr = 2005:2020;
 [alpha_yr,r_yr] = year_stats(alpha,r_all,tbl.date,yr);
 friction = 0.0010; % 摩擦成本
 costs = fees(position,friction);
