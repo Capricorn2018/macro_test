@@ -201,7 +201,7 @@ nav_sprd = [1;cumprod(1+r_sprd)];
 nav_fin = [1;cumprod(1+r_fin)];
 nav_stk = [1;cumprod(1+r_stk)];
 
-figure(1);
+figure(1);  
 subplot(2,1,1);
 plot(tbl.date,nav(1:end-1),'r','LineWidth',2);
 datetick('x','yyyy','keeplimits');
