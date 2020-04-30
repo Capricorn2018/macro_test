@@ -8,6 +8,11 @@ end_dt = '2020-04-24';
                                             
 edb = array2table(edb_data,'VariableNames',edb_codes);
 
+% 中债国债即期收益率1,3,5,7,10y
+[edb_data2,edb_codes2,~,edb_times2,~,~] = w.edb('M1001102,M1001104,M1001106,M1001108,M1001110',start_dt,end_dt,'Fill=Previous'); 
+                                            
+edb2 = array2table(edb_data2,'VariableNames',edb_codes2);
+
 factors = table();
 
 % 期限利差因子
