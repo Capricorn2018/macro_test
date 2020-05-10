@@ -1,6 +1,6 @@
 w = windmatlab;
 
-start_dt = '2010-01-01';
+start_dt = '2005-01-01';
 end_dt = '2020-04-24';
 
 % 国开债1,3,5,7,10; 国债5y                                            
@@ -42,18 +42,34 @@ end
  [~,Locb] = ismember(reb,ret_times);
  ret = ret(Locb,:);
  y1 = ret.CBA02521; y2 = ret.CBA02551;
- y1 = [NaN; y1(2:end)./y1(1:end-1) - 1.];
- y2 = [NaN; y2(2:end)./y2(1:end-1) - 1.];
+ y1 = [y1(2:end)./y1(1:end-1) - 1.;NaN];
+ y2 = [y2(2:end)./y2(1:end-1) - 1.;NaN];
  y = y2 - y1;
 
  f = table2array(f);
  f = [ones(size(f,1),1),f];
  
- [~,Locb] = ismember(reb,edb_times2);
- fwd = fwd(Locb,:);
+%  [~,Locb] = ismember(reb,edb_times2);
+%  fwd = fwd(Locb,:);
+ 
+ y = y(1:end-1);
+%  fwd = fwd(1:end-1,:);
+ f = f(1:end-1,:);
 
- %下面回归
- mdl = fitlm(fwd,y);
+ window = 72;
+ 
+ pred = nan(length(y),1);
+ intercept = pred;
+ 
+ for j=(window+1):length(y)
+    
+    %下面回归
+    mdl = fitlm(f(1:j-1,:),y(1:j-1));
+    
+    pred(j) = [1,f(j,:)] * mdl.Coefficients.Estimate;
+    intercept(j) = [1,mean(f(1:j-1,:),1)] *  mdl.Coefficients.Estimate;
+    
+ end
 
  w.close();
 

@@ -5,7 +5,7 @@ function frate = forward(spot,mat)
     
     for i=2:length(spot)
         
-        frate(i) = (((1 + spot(i) * mat(i) / 100) / (1+spot(i-1)*mat(i-1) / 100)) - 1 )/ (mat(i)-mat(i-1)) * 100; 
+        frate(i) = (mat(i)*spot(i)-mat(i-1)*spot(i-1))/(mat(i)-mat(i-1)); %(((1 + spot(i) * mat(i) / 100) / (1+spot(i-1)*mat(i-1) / 100)) - 1 )/ (mat(i)-mat(i-1)) * 100; 
         
     end
 
