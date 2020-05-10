@@ -11,6 +11,10 @@ edb = array2table(edb_data,'VariableNames',edb_codes);
 [edb_data2,edb_codes2,~,edb_times2,~,~] = w.edb('M1001102,M1001104,M1001106,M1001108,M1001110',start_dt,end_dt,'Fill=Previous'); 
 edb2 = array2table(edb_data2,'VariableNames',edb_codes2);
 mat = [1;3;5;7;10];
+fwd = nan(size(edb_data2));
+for i=1:size(fwd,1)
+    fwd(i,:) = forward(edb_data2(i,:),mat)';
+end
 
  % 国开0~1,1~3,3~5,5~7,7~10,沪深300,中债高信用1~3
  [ret_data,ret_codes,~,ret_times,~,~] = w.wsd('CBA02511.CS,CBA02521.CS,CBA02531.CS,CBA02541.CS,CBA02551.CS,399300.SZ,CBA01921.CS','close',start_dt,end_dt);
@@ -44,9 +48,12 @@ mat = [1;3;5;7;10];
 
  f = table2array(f);
  f = [ones(size(f,1),1),f];
+ 
+ [~,Locb] = ismember(reb,edb_times2);
+ fwd = fwd(Locb,:);
 
  %下面回归
- mdl = fitlm(f,y);
+ mdl = fitlm(fwd,y);
 
  w.close();
 
