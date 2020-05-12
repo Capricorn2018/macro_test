@@ -67,7 +67,6 @@ end
  window = 40;
  
  pred = nan(length(y),1);
- intercept = pred;
  
  for j=(window+1):length(y)
     
@@ -75,7 +74,6 @@ end
     mdl = fitlm(f(1:j-1,:),y(1:j-1));
     
     pred(j) = [1,f(j,:)] * mdl.Coefficients.Estimate;
-    intercept(j) = [1,mean(f(1:j-1,:),1)] *  mdl.Coefficients.Estimate;
     
  end
 
