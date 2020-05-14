@@ -1,7 +1,7 @@
 w = windmatlab;
 
-start_dt = '2006-05-01';
-end_dt = '2020-04-24';
+start_dt = '2006-06-01';
+end_dt = '2020-1-10';
 
 % 国开债1,3,5,7,10;
 % 国债1,3,5,7,10
@@ -28,12 +28,13 @@ end
 
  % 期限利差因子
  factors.date = edb_times;
- factors.sprd31 = edb.M1004265 - edb.M1004263;
- factors.sprd53 = edb.M1004267 - edb.M1004265;
- factors.sprd105 = edb.M1004271 - edb.M1004267;
+ factors.sprd101 = edb.M1004271 - edb.M1004263;
+ %  factors.sprd31 = edb.M1004265 - edb.M1004263;
+ %  factors.sprd53 = edb.M1004267 - edb.M1004265;
+ %  factors.sprd105 = edb.M1004271 - edb.M1004267;
 
  % 流动性溢价因子, 用国开5-国债5
- %factors.liq5y = edb.M1004267 - edb.M1000162;
+ factors.liq5y = edb.M1004267 - edb.M1000162;
  
  % 国债期限利差因子
  %  factors.bond51 = edb.M1000162 - edb.M1000158;
@@ -41,11 +42,11 @@ end
  %  factors.curv = edb.M1000162 * 2 - edb.M1000158 - edb.M1000162;
 
 
- reb = find_month_dates(5, ret_times, 'last'); 
+ reb = find_month_dates(2, ret_times, 'first'); 
 
  [~,Locb] = ismember(reb, factors.date);
 
- f = factors(Locb,:);
+ f = factors(Locb,2:end);
 
  [~,Locb] = ismember(reb,ret_times);
  ret = ret(Locb,:);
@@ -65,7 +66,7 @@ end
  prev = [NaN;y(1:end-1)];
  
  % 试一下动量
- f = [f, prev, hs300];
+ f = [f, prev];
  
  y = y(1:end-1);
  fwd = fwd(1:end-1,:);
