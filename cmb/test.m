@@ -39,8 +39,8 @@ f = factors(Locb,2:end);
 
 % 指数收益的数据对齐，计算超额收益
 [~,Locb] = ismember(reb,ret_times);
-ret = ret(Locb,:);
-y1 = ret.CBA02521; y2 = ret.CBA02551;
+ret_reb = ret(Locb,:);
+y1 = ret_reb.CBA02521; y2 = ret_reb.CBA02551;
 y1 = [y1(2:end)./y1(1:end-1) - 1.;NaN];
 y2 = [y2(2:end)./y2(1:end-1) - 1.;NaN];
 y = y2 - y1;
@@ -77,13 +77,22 @@ pred = nan(length(y),1);
 
 for j=(window+1):length(y)
 
-% 下面回归
-mdl = fitlm(f(1:j-1,:),y(1:j-1));
+    % 下面回归
+    mdl = fitlm(f(1:j-1,:),y(1:j-1));
 
-% 用下期的因子数据和本期的回归结果计算预测数据
-pred(j) = [1,f(j,:)] * mdl.Coefficients.Estimate;
+    % 用下期的因子数据和本期的回归结果计算预测数据
+    pred(j) = [1,f(j,:)] * mdl.Coefficients.Estimate;
 
 end
+
+signal = pred > 0;
+close1 = ret.CBA02521;
+close10 = ret.CBA02551;
+r1 = [NaN;close1(2:end)./close1(1:end-1) - 1];
+r10 = [NaN;close10(2:end)./close10(1:end-1) - 1];
+ret_dt = ret_times;
+
+[nav,nav_alpha,nav_dt] = show_results(reb, signal, r1, r10, ret_dt);
 
 w.close();
 
