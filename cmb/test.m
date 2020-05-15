@@ -3,26 +3,21 @@ w = windmatlab;
 start_dt = '2006-06-01';
 end_dt = '2020-1-10';
 
-% 这里没有用到
 % 国开债1,3,5,7,10;
 % 国债1,3,5,7,10
-[edb_data,edb_codes,~,edb_times,~,~] = w.edb(['M1004263,M1004265,M1004267,M1004269,M1004271,',...
-                                                'M1000158,M1000160,M1000162,M1000164,M1000166'],...
+[edb_data,edb_codes,~,edb_times,~,~] = w.edb(['M1004263,M1004265,M1004267,',...
+                                              'M1004269,M1004271,M1000158,',...
+                                              'M1000160,M1000162,M1000164,',...
+                                              'M1000166'],...
                                         start_dt,end_dt,'Fill=Previous'); 
 edb = array2table(edb_data,'VariableNames',edb_codes);
 
-% 国开债即期收益率1,3,5,7,10y
-[edb_data2,edb_codes2,~,edb_times2,~,~] = w.edb('M1004281,M1004283,M1004285,M1004287,M1004289',start_dt,end_dt,'Fill=Previous'); 
-edb2 = array2table(edb_data2,'VariableNames',edb_codes2);
-mat = [1;3;5;7;10];
-fwd = nan(size(edb_data2));
-for i=1:size(fwd,1)
-    fwd(i,:) = forward(edb_data2(i,:),mat)';
-end
-
 %这次没有用到
 % 国开0~1,1~3,3~5,5~7,7~10,沪深300,中债高信用1~3
-[ret_data,ret_codes,~,ret_times,~,~] = w.wsd('CBA02511.CS,CBA02521.CS,CBA02531.CS,CBA02541.CS,CBA02551.CS,399300.SZ,CBA01921.CS','close',start_dt,end_dt);
+[ret_data,ret_codes,~,ret_times,~,~] = w.wsd(['CBA02511.CS,CBA02521.CS,',...
+                                              'CBA02531.CS,CBA02541.CS,',...
+                                              'CBA02551.CS,399300.SZ,',...
+                                              'CBA01921.CS'],'close',start_dt,end_dt);
 names = {'date','CBA02511','CBA02521','CBA02531','CBA02541','CBA02551','HS300','CBA01921'};
 ret = array2table([ret_times,ret_data],'VariableNames',names);
 
@@ -55,7 +50,7 @@ f = table2array(f);
 f = [ones(size(f,1),1),f];
 
 
-% 试一下动量
+% 试一下动量, AIC分析大概自回归2周，这里为了降频就用上个月
 prev = [NaN;y(1:end-1)];
 f = [f, prev];
 
@@ -71,7 +66,6 @@ f = [f,res];
 
 % 去掉最后一期的数据缺失
 y = y(1:end-1);
-fwd = fwd(1:end-1,:);
 f = f(1:end-1,:);
 
 
