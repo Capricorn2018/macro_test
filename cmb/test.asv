@@ -55,13 +55,22 @@ prev = [NaN;y(1:end-1)];
 f = [f, prev];
 
 % 试一下卫星数据
-% 这个数据15年之前用的PMI, 15年3月之后用灯光数据和PMI做正交化加权处理
+% 这个数据在15年3月之前用的PMI
+% 15年3月之后用的PMI和灯光数据的加权
+% PMI数据都取的实际值减去15年3月之后的均值，再除以方差
+% 灯光数据类似PMI的处理
+% 二者加权用的是类似PCA的方法 ((a-mean(a))/std(a) + (b-mean(b))/std(b))/(1+rho)
+% 这里面有一定的数据回看的成分，比如说均值和方差，但是卫星数据实在历史太短也没办法
 [res,~,~] = read_satellite(reb);
 f = [f,res];
 
 % 去掉最后一期的数据缺失
 y = y(1:end-1);
 f = f(1:end-1,:);
+
+
+
+
 
 
 % 初始窗口40个月是傅里叶分析得出的主周期
@@ -87,7 +96,6 @@ r1 = [NaN;close1(2:end)./close1(1:end-1) - 1];
 r10 = [NaN;close10(2:end)./close10(1:end-1) - 1];
 ret_dt = ret_times;
 
-% 看一下绝对收益和超额收益的结果
 [nav,nav_alpha,nav_dt] = show_results(reb, signal, r1, r10, ret_dt);
 
 w.close();
