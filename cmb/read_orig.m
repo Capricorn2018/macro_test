@@ -62,7 +62,6 @@ function [res,sat,sat_ma3chg,pmi_ma3chg,dt] = read_orig(start_dt,end_dt)
     
     res = factor1 + factor2;
     
-    bl = ~isnan(pmi_ma3chg) & ~isnan(sat_ma3chg);
     res(bl) = res(bl) / sqrt(2*(1+rho)) ;
     
     res(isnan(pmi_ma3chg) & isnan(sat_ma3chg)) = NaN;
