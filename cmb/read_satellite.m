@@ -1,19 +1,25 @@
 function [res,sat,sat_dt] = read_satellite(reb_dt)
 
-    [num,txt] = xlsread('satellite.csv');
+%     [num,txt] = xlsread('satellite.csv');
+%     
+%     sat_dt = nan(length(txt),1);
+%     
+%     for i=1:length(txt)
+%         sat_dt(i) = datenum(txt{i});
+%     end
+%
+%     sat = num(:,end);
+
+    [sat,~,~,~,sat_dt] = read_orig(reb_dt(1)-730,reb_dt(end));
     
-    sat_dt = nan(length(txt),1);
     
-    for i=1:length(txt)
-        sat_dt(i) = datenum(txt{i});
-    end
-    
-    sat = num(:,end);
     res = nan(length(reb_dt),1);
     
     for j = 1:length(sat_dt)
         idx = match_date(sat_dt(j),reb_dt);
-        res(idx) = sat(j);
+        if ~isnan(idx)
+            res(idx) = sat(j);
+        end
     end
     
 end
