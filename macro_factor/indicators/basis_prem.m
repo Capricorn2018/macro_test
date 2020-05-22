@@ -1,5 +1,6 @@
-function [res,times,cont_list] = basis_prem(start_dt,end_dt)
+function [res,calender,times,cont_list] = basis_prem(start_dt,end_dt)
 % basis_prem国债期货基差历史
+% calender是国债期货跨期价差历史
     
     w = windmatlab;
 
@@ -50,12 +51,23 @@ function [res,times,cont_list] = basis_prem(start_dt,end_dt)
     
     
     res = nan(length(ctd_times),length(cont_list));
+    
+    calender = nan(length(ctd_times),2);
+    
     % 按日循环
     for i = 1:length(ctd_times)
         % 这里先用active_cont来取每日活跃合约
         % 每日T合约编号, 当季:1, 次季:2, 远季:3
         curr_dt = ctd_times(i);
         [rk,~] = active_cont(curr_dt,frst_dt,last_dt);
+        
+        if any(rk==1) && any(rk==2)
+            calender(i,1) = T(i,rk==1) - T(i,rk==2);
+        end
+        
+        if any(rk==2) && any(rk==3)
+            calender(i,2) = T(i,rk==2) - T(i,rk==3);
+        end
         
         
         % 然后利用上面的cf和T以及bond来算当日的basis并且取最小的
