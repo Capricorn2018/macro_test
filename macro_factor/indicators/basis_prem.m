@@ -5,7 +5,7 @@ function [res,calender,times,cont_list] = basis_prem(start_dt,end_dt)
     w = windmatlab;
 
     % 读取所有的T合约列表
-    [contracts,~,~,~,~,~] = w.wset('futurecc','wind_code=T.CFE');
+    [contracts,~,~,~,~,~] = w.wset('futurecc','wind_code=TF.CFE');
     
     % 合约列表中每个合约的起始和终止交易日
     frst_dt = datenum(contracts(:,7),'yyyy/mm/dd');
@@ -61,6 +61,7 @@ function [res,calender,times,cont_list] = basis_prem(start_dt,end_dt)
         curr_dt = ctd_times(i);
         [rk,~] = active_cont(curr_dt,frst_dt,last_dt);
         
+        % 跨期价差
         if any(rk==1) && any(rk==2)
             calender(i,1) = T(i,rk==1) - T(i,rk==2);
         end
