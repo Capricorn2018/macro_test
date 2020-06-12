@@ -1,4 +1,4 @@
-function [res,calender,times,cont_list] = basis_prem(start_dt,end_dt)
+function [res,calender,dominant,times,cont_list] = basis_prem(start_dt,end_dt)
 % basis_prem国债期货基差历史
 % calender是国债期货跨期价差历史
     
@@ -32,6 +32,14 @@ function [res,calender,times,cont_list] = basis_prem(start_dt,end_dt)
     
     [bond_wind,~,~,bond_times,~,~] = w.wsd(bond_list,'net_cnbd',start_dt,end_dt,'credibility=1');
     [T_wind,~,~,T_times,~,~] = w.wsd(cont_list,'close',start_dt,end_dt);
+    [oi_wind,~,~,oi_times,~,~] = w.wsd(cont_list,'oi',start_dt,end_dt);
+    
+    [C,ia,ib] = intersect(T_times,oi_times);
+    T_wind = T_wind(ia,:);
+    oi_wind = oi_wind(ib,:);
+    T_times = C;
+    oi_times = C;
+    
     
     % 先做时间对齐避免数据不统一
     [Lia,Locb] = ismember(bond_times,ctd_times);
@@ -40,6 +48,7 @@ function [res,calender,times,cont_list] = basis_prem(start_dt,end_dt)
     % 先做时间对齐避免数据不统一
     [Lia,Locb] = ismember(T_times,ctd_times);
     T(Locb(Locb>0),:) = T_wind(Lia,:);
+    oi(Locb(Locb>0),:) = oi_wind(Lia,:);
     
     cf = nan(length(bond_list),length(cont_list));    
     for i=1:length(cont_list)
@@ -53,6 +62,7 @@ function [res,calender,times,cont_list] = basis_prem(start_dt,end_dt)
     res = nan(length(ctd_times),length(cont_list));
     
     calender = nan(length(ctd_times),2);
+    dominant = nan(length(ctd_times),1);
     
     % 按日循环
     for i = 1:length(ctd_times)
@@ -64,10 +74,16 @@ function [res,calender,times,cont_list] = basis_prem(start_dt,end_dt)
         % 跨期价差
         if any(rk==1) && any(rk==2)
             calender(i,1) = T(i,rk==1) - T(i,rk==2);
+            if oi(i,rk==1) >= oi(i,rk==2)
+                dominant(i) = calender(i,1);
+            end
         end
         
         if any(rk==2) && any(rk==3)
             calender(i,2) = T(i,rk==2) - T(i,rk==3);
+            if oi(i,rk==1) < oi(i,rk==2)
+                dominant(i) = calender(i,2);
+            end
         end
         
         
