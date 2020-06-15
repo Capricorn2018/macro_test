@@ -38,7 +38,6 @@ function [basis,calender,dominant,dominant_basis,times,cont_list] = basis_prem(s
     [C,ia,ib] = intersect(T_times,oi_times);
     T_wind = T_wind(ia,:);
     oi_wind = oi_wind(ib,:);
-    T_times = C;
     
     [C,ia,ib] = intersect(C,lt_times);
     T_wind = T_wind(ia,:);
