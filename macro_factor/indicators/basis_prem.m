@@ -1,4 +1,4 @@
-function [res,calender,dominant,times,cont_list] = basis_prem(start_dt,end_dt)
+function [basis,calender,dominant,dominant_basis,times,cont_list] = basis_prem(start_dt,end_dt)
 % basis_prem国债期货基差历史
 % calender是国债期货跨期价差历史
     
@@ -33,12 +33,19 @@ function [res,calender,dominant,times,cont_list] = basis_prem(start_dt,end_dt)
     [bond_wind,~,~,bond_times,~,~] = w.wsd(bond_list,'net_cnbd',start_dt,end_dt,'credibility=1');
     [T_wind,~,~,T_times,~,~] = w.wsd(cont_list,'close',start_dt,end_dt);
     [oi_wind,~,~,oi_times,~,~] = w.wsd(cont_list,'oi',start_dt,end_dt);
+    [lt_wind,~,~,lt_times,~,~] = w.wsd(cont_list,'lasttrade_date',start_dt,end_dt);
     
     [C,ia,ib] = intersect(T_times,oi_times);
     T_wind = T_wind(ia,:);
     oi_wind = oi_wind(ib,:);
     T_times = C;
-    oi_times = C;
+    
+    [C,ia,ib] = intersect(C,lt_times);
+    T_wind = T_wind(ia,:);
+    oi_wind = oi_wind(ia,:);
+    lt_wind = lt_wind(ib,:);
+    T_times = C;
+    % oi_times = C;
     
     
     % 先做时间对齐避免数据不统一
@@ -59,10 +66,11 @@ function [res,calender,dominant,times,cont_list] = basis_prem(start_dt,end_dt)
     end
     
     
-    res = nan(length(ctd_times),length(cont_list));
+    basis = nan(length(ctd_times),length(cont_list));
     
     calender = nan(length(ctd_times),2);
     dominant = nan(length(ctd_times),1);
+    dominant_basis = nan(length(ctd_times),1); % 主力合约年化基差
     
     % 按日循环
     for i = 1:length(ctd_times)
@@ -71,11 +79,32 @@ function [res,calender,dominant,times,cont_list] = basis_prem(start_dt,end_dt)
         curr_dt = ctd_times(i);
         [rk,~] = active_cont(curr_dt,frst_dt,last_dt);
         
+        % 然后利用上面的cf和T以及bond来算当日的basis并且取最小的
+        if any(rk==1)
+            cf1 = cf(:,rk==1);
+            basis1 = bond(i,:)' - cf1 .* T(i,rk==1);
+            basis(i,rk==1) = min(basis1);
+        end
+        
+        if any(rk==2)
+            cf2 = cf(:,rk==2);
+            basis2 = bond(i,:)' - cf2 .* T(i,rk==2);
+            basis(i,rk==2) = min(basis2);   
+        end
+        
+        if any(rk==3)
+            cf3 = cf(:,rk==3);
+            basis3 = bond(i,:)' - cf3 .* T(i,rk==3);
+            basis(i,rk==3) = min(basis3);        
+        end
+        
+        
         % 跨期价差
         if any(rk==1) && any(rk==2)
             calender(i,1) = T(i,rk==1) - T(i,rk==2);
             if oi(i,rk==1) >= oi(i,rk==2)
                 dominant(i) = calender(i,1);
+                dominant_basis(i) = basis(i,rk==1) * 63 / (datenum(lt_wind(i,rk==1)) - curr_dt);
             end
         end
         
@@ -83,34 +112,15 @@ function [res,calender,dominant,times,cont_list] = basis_prem(start_dt,end_dt)
             calender(i,2) = T(i,rk==2) - T(i,rk==3);
             if oi(i,rk==1) < oi(i,rk==2)
                 dominant(i) = calender(i,2);
+                dominant_basis(i) = basis(i,rk==2) * 63 / (datenum(lt_wind(i,rk==2)) - curr_dt);
             end
-        end
-        
-        
-        % 然后利用上面的cf和T以及bond来算当日的basis并且取最小的
-        if any(rk==1)
-            cf1 = cf(:,rk==1);
-            basis1 = bond(i,:)' - cf1 .* T(i,rk==1);
-            res(i,rk==1) = min(basis1);
-        end
-        
-        if any(rk==2)
-            cf2 = cf(:,rk==2);
-            basis2 = bond(i,:)' - cf2 .* T(i,rk==2);
-            res(i,rk==2) = min(basis2);   
-        end
-        
-        if any(rk==3)
-            cf3 = cf(:,rk==3);
-            basis3 = bond(i,:)' - cf3 .* T(i,rk==3);
-            res(i,rk==3) = min(basis3);        
         end
         
     end
     
     times = ctd_times;
     
-    plot_basis(times,last_dt,res,cont_list,length(cont_list));
+    plot_basis(times,last_dt,basis,cont_list,length(cont_list));
     
     w.close;
     
