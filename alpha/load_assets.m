@@ -34,10 +34,10 @@ function [nav,ret] = load_assets(filename,reb)
                 ret_lag1d(i,2:end) = array2table(table2array(raw(Locb(i+1)+1,2:end))./table2array(raw(Locb(i)+1,2:end)) - 1);
                 ret_mean3d(i,2:end) = array2table(1/3 * table2array(ret_lag3d(i,2:end)) + 1/3 * table2array(ret_lag2d(i,2:end)) + 1/3 * table2array(ret_lag1d(i,2:end)));
             else
-                ret_lag3d(i,2:end)= ret(i,2:end);
-                ret_lag2d(i,2:end)= ret(i,2:end);
-                ret_lag1d(i,2:end)= ret(i,2:end);
-                ret_mean3d(i,2:end) = ret(i,2:end); % 信号触发后三天的平均价
+                ret_lag3d(i,2:end)= array2table(table2array(raw(end,2:end))./table2array(raw(Locb(i)+3,2:end)) - 1); %ret(i,2:end);
+                ret_lag2d(i,2:end)= array2table(table2array(raw(end,2:end))./table2array(raw(Locb(i)+2,2:end)) - 1);  %ret(i,2:end);
+                ret_lag1d(i,2:end)= array2table(table2array(raw(end,2:end))./table2array(raw(Locb(i)+2,2:end)) - 1);  %ret(i,2:end);
+                ret_mean3d(i,2:end) = array2table(1/3 * table2array(ret_lag3d(i,2:end)) + 1/3 * table2array(ret_lag2d(i,2:end)) + 1/3 * table2array(ret_lag1d(i,2:end))); %ret(i,2:end); % 信号触发后三天的平均价
             end
         else
             ret(i,2:end)= array2table(table2array(raw(end,2:end))./table2array(raw(Locb(i),2:end))-1);
