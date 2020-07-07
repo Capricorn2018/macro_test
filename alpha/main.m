@@ -62,6 +62,10 @@ sprdswap = [NaN;tbl.sprdswap(1:end-1)];
 curv135 = tbl.mean_curv135;
 curv1510 = tbl.mean_curv1510;
 
+sprd51_10d = tbl.mean10_sprd51;
+curv1510_10d = tbl.mean10_curv1510;
+curv135_10d = tbl.mean10_curv135;
+
 sprd31_3m = tbl.sprd31_3m;
 sprd51_3m = tbl.sprd51_3m;
 curv135_3m = tbl.curv135_3m;
@@ -75,30 +79,39 @@ r_short = tbl.CBA02521_lag3d;
 r_mid = tbl.CBA02531_lag3d;
 r_money = tbl.CBA02511_lag3d;
 
-signal_sprd = roll_signal(sprd51,40,0.5);
+signal_sprd = roll_signal(sprd51,sprd51,40,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
 
-signal_sprd51swap = roll_signal(sprd51swap,40,0.5);
+signal_sprd_10d = roll_signal(sprd51_10d,sprd51,40,0.5);
+[r_sprd_10d,alpha_sprd_10d] = long_short(r_long,r_short,signal_sprd);
+
+signal_sprd51swap = roll_signal(sprd51swap,sprd51swap,40,0.5);
 [r_sprd51swap,alpha_sprd51swap] = long_short(r_long,r_short,signal_sprd51swap);
 
-signal_sprd710 = roll_signal(sprd710,40,0.5); % 国债7-10，这个跟5-1和1510结合起来能提高一点点做多的胜率
+signal_sprd710 = roll_signal(sprd710,sprd710,40,0.5); % 国债7-10，这个跟5-1和1510结合起来能提高一点点做多的胜率
 [r_sprd710,alpha_sprd710] = long_short(r_long,r_short,signal_sprd710);
 
-signal_AAA = roll_signal(sprdAAA,40,0.5); % 信用利差，跟5-1和1510结合起来也能提高做多胜率
+signal_AAA = roll_signal(sprdAAA,sprdAAA,40,0.5); % 信用利差，跟5-1和1510结合起来也能提高做多胜率
 [r_AAA,alpha_AAA] = long_short(r_long,r_short,signal_AAA);
 
-signal_swap = roll_signal(sprdswap,40,0.5); % SHIBOR利率互换与FR007利率互换利差,代表流动性溢价
+signal_swap = roll_signal(sprdswap,sprdswap,40,0.5); % SHIBOR利率互换与FR007利率互换利差,代表流动性溢价
 [r_swap,alpha_swap] = long_short(r_long,r_short,signal_swap);
 
-signal_curv = roll_signal(curv1510,40,0.5);
+signal_curv = roll_signal(curv1510,curv1510,40,0.5);
 [r_curv,alpha_curv] = long_short(r_long,r_short,signal_curv);
 
-signal_curv2 = roll_signal(curv135,40,0.5);
+signal_curv_10d = roll_signal(curv1510_10d,curv1510,40,0.5);
+[r_curv_10d,alpha_curv_10d] = long_short(r_long,r_short,signal_curv);
+
+signal_curv2 = roll_signal(curv135,curv135,40,0.5);
 [r_curv2,alpha_curv2] = long_short(r_long,r_short,signal_curv2);
 
-signal_sprd3m = roll_signal(sprd51_3m,40,0.5);
-signal_curv3m = roll_signal(curv1510_3m,40,0.5);
-signal_fin3m = roll_signal(sprdfin_3m,40,0.5);
+signal_curv2_10d = roll_signal(curv135_10d,curv135,40,0.5);
+[r_curv2_10d,alpha_curv2_10d] = long_short(r_long,r_short,signal_curv);
+
+signal_sprd3m = roll_signal(sprd51_3m,sprd51_3m,40,0.5);
+signal_curv3m = roll_signal(curv1510_3m,curv1510_3m,40,0.5);
+signal_fin3m = roll_signal(sprdfin_3m,sprdfin_3m,40,0.5);
 
 signal_mom = mom1m>0;
 [r_mom,alpha_mom] = long_short(r_long,r_short,signal_mom);
@@ -109,10 +122,10 @@ signal_mom3m = mom3m>0;
 signal_mom6m = mom6m<0; % 注意这里是反转，不是动量！
 [r_mom6m,alpha_mom6m] = long_short(r_long,r_short,signal_mom6m);
 
-signal_fin = roll_signal(sprdfin,40,0.5);
+signal_fin = roll_signal(sprdfin,sprdfin,40,0.5);
 [r_fin,alpha_fin] = long_short(r_long,r_short,signal_fin);
 
-signal_tax = roll_signal(taxfin,40,0.5);
+signal_tax = roll_signal(taxfin,taxfin,40,0.5);
 [r_tax,alpha_tax] = long_short(r_long,r_short,signal_tax);
 
 signal_stk3m = stk3m < 0; 
@@ -129,11 +142,11 @@ r_base = r_short;
 
 % 看空时换短债
 r_sell = r_base;
-signal_sell = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,或者从1~3换到货币
+signal_sell = (signal_curv==-1 & signal_curv2==-1 & signal_curv_10d==-1 & signal_curv2_10d==-1); % 为1时长债换仓成短债,或者从1~3换到货币
 r_sell(signal_sell==1) = r_money(signal_sell==1);
 
 r_found = r_base;
-signal_found = (signal_curv==1 &  signal_sprd==1);
+signal_found = (signal_curv==1 &  signal_sprd==1 & signal_curv_10d==1 & signal_sprd_10d==1);
 r_found(signal_found==1) = r_long(signal_found==1);
 
 r_reverse = r_base;

@@ -21,15 +21,26 @@ function result = load_factor(filename,reb)
         eval(['result.vol_',factor_name,'_1 = nan(height(result),1);']);
         eval(['result.vol_',factor_name,'_3 = nan(height(result),1);']);
         eval(['result.vol_',factor_name,'_6 = nan(height(result),1);']);
+        
+        % 新加, 10个工作日平均
+        eval(['result.mean10_',factor_name,' = nan(height(result),1);']);
 
         for i = 1:length(Locb)
 
             if(i>1)
                 eval(['result.mean_',factor_name,'(i)= mean(raw.',factor_name,'((Locb(i-1)+1):Locb(i)));']);
                 eval(['result.vol_',factor_name,'_1(i)= std(raw.',factor_name,'((Locb(i-1)+1):Locb(i)));']);
+                
+                if(Locb(i)>9)
+                    eval(['result.mean10_',factor_name,'(i)= mean(raw.',factor_name,'((Locb(i)-9):Locb(i)));']);
+                end
             else
                 eval(['result.mean_',factor_name,'(i) = mean(raw.',factor_name,'(1:Locb(i)));']);
                 eval(['result.vol_',factor_name,'_1(i)= std(raw.',factor_name,'(1:Locb(i)));']);
+                
+                if(Locb(i)>9)
+                    eval(['result.mean10_',factor_name,'(i)= mean(raw.',factor_name,'((Locb(i)-9):Locb(i)));']);
+                end
             end
             
             if(i>3)
