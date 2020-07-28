@@ -1,11 +1,11 @@
 start_dt = '1990-01-01';
-end_dt = '2020-07-07';
+end_dt = '2020-07-27';
 file = 'D:/Projects/macro_test/data.mat';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2020-06-22'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2020-07-27'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,reb);
 
 factor = load_factor(file,reb);
