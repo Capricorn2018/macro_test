@@ -1,5 +1,5 @@
 start_dt = '20130901';
-end_dt = '20200723';
+end_dt = '20200806';
 
 % [basis,calender,dominant,dominant_basis,times,cont_list] = basis_prem(start_dt,end_dt);
 
@@ -23,4 +23,5 @@ plot(C,y);
 hold on;
 plot(C,y_p);
 datetick('x','yyyymm','keeplimits');
+legend('basis','pred_basis');
 hold off;
