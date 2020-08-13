@@ -1,7 +1,7 @@
 start_dt = '20150101';
 end_dt = '20200807';
 
-%[basis,calender,dominant,dominant_basis,times,cont_list] = basis_prem(start_dt,end_dt);
+%[basis,basis_time2mat,calender,dominant,dominant_basis,times,cont_list] = basis_prem(start_dt,end_dt);
 
 %[curve,yield] = term_prem(start_dt,end_dt);
 

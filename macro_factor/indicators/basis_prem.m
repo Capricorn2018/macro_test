@@ -1,11 +1,11 @@
-function [basis,calender,dominant,dominant_basis,times,cont_list] = basis_prem(start_dt,end_dt)
+function [basis,basis_time2mat,calender,dominant,dominant_basis,times,cont_list] = basis_prem(start_dt,end_dt)
 % basis_prem国债期货基差历史
 % calender是国债期货跨期价差历史
     
     w = windmatlab;
 
     % 读取所有的T合约列表
-    [contracts,~,~,~,~,~] = w.wset('futurecc','wind_code=TF.CFE');
+    [contracts,~,~,~,~,~] = w.wset('futurecc','wind_code=T.CFE');
     
     % 合约列表中每个合约的起始和终止交易日
     frst_dt = datenum(contracts(:,7),'yyyy/mm/dd');
@@ -120,6 +120,15 @@ function [basis,calender,dominant,dominant_basis,times,cont_list] = basis_prem(s
     times = ctd_times;
     
     plot_basis(times,last_dt,basis,cont_list,length(cont_list));
+    
+    idx = -300:0;
+    basis_time2mat = nan(length(idx),length(cont_list));
+    for i = 1:length(cont_list)
+        [~,ia,ib] = intersect(times - last_dt(i),idx);
+        basis_time2mat(ib,i) = basis(ia,i);
+        basis_time2mat(1:max(ib),i) = fillmissing(basis_time2mat(1:max(ib),i),'previous');
+    end
+   
     
     w.close;
     
