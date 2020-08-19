@@ -142,7 +142,7 @@ r_base = r_short;
 
 % 看空时换短债
 r_sell = r_base;
-signal_sell = (signal_curv==-1 & signal_curv2==-1 & signal_curv_10d==-1 & signal_curv2_10d==-1); % 为1时长债换仓成短债,或者从1~3换到货币
+signal_sell = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,或者从1~3换到货币
 r_sell(signal_sell==1) = r_money(signal_sell==1);
 
 r_found = r_base;
@@ -189,7 +189,7 @@ r_sell3(signal_sell3==1) = r_money(signal_sell3==1);
 
 % 用隐含税率作为赔率指标
 % max = 1;
-% active = ones(length(taxfin),1) * max;
+% active = ones(length(taxfin),1) * maaax;
 % for i = 40:length(taxfin)
 %     if taxfin(i) < median(taxfin(1:i))
 %         active(i) = 0.5 * active(i);
@@ -198,6 +198,7 @@ r_sell3(signal_sell3==1) = r_money(signal_sell3==1);
 
 active = 0.6; % 主动长债仓位限制
 signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_sell2,signal_sell3);
+signal.Properties.VariableNames{1} = 'times';
 position = (signal_found) .* active * 1/3 + (signal_prev) .* active * 1/3 + (signal_reverse) .* active * 1/3;
 r_all = r_sell .* (1-active) + r_found .* active * 1/3 + r_prev .* active * 1/3 + r_reverse .* active * 1/3 ;
 %r_all = r_base .* (1-active) + r_found .* active * 1/3 + r_prev .* active * 1/3 + r_reverse .* active * 1/3 ;
