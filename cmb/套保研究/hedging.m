@@ -1,4 +1,4 @@
-main;
+% main;
 
 nav = xlsread('C:\Users\zhouxy\Desktop\日常办公\信用债筛选项目\结果和问题\index_nv.csv');
 nav = nav(:,2:end);
@@ -60,14 +60,19 @@ long_signal = long_signal(ib);
 pct_main = pct_main(ia);
 dv01_main = dv01_main(ia);
 
-ratio = 0.5;
+ratio = 0.25;
 nav_pct = [0;nav_data(2:end)./nav_data(1:end-1)-1];
 
 hedge_pct = hedge_signal .* pct_main/100 .* ratio;
 
-pos = 0.4;
+pos = 0.2;
 long_pct = long_signal .* pct_main/100 .* pos;
 
 rtn = nav_pct - hedge_pct + long_pct;
 
 result = cumprod(1+rtn,'omitnan');
+
+s1 = [times,result];
+s2 = [times,ones(length(result),1)];
+v = {'套保策略净值','高等级优选1-3年信用债'};
+plot_acc_rtn(s1,s2,v);
