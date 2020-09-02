@@ -29,10 +29,10 @@ times_str = mat2cell(times_str,ones(length(times_str),1),8);
 
 excavator = agg_jan_feb(times,data(:,1),false);
 cement_old = data(:,2) - 100; cement_old = agg_jan_feb(times,cement_old,false);% 水泥数据比较奇怪，是同比+100 
-cement_new = agg_jan_feb(times,data(:,3),true);
+cement_new = agg_jan_feb(times,data(:,3),true) * 100;
 steel = agg_jan_feb(times,data(:,4),true);
 ore = agg_jan_feb(times,data(:,5),true);
-multiplier = data(:,6)./data(:,7); 
+multiplier = agg_jan_feb(times,data(:,6)./data(:,7),true); 
 dollar = data(:,8);
 coppergold = data(:,9)./data(:,10);
 yield = [NaN; data(2:end,11)-data(1:end-1,11)];
@@ -71,50 +71,10 @@ for i=1:height(factor)
     prob(i) = kkt(x,mu1,mu2,std1,std2);
 end
 
+yield_chg = [factor.yield(3:end);nan(2,1)];
+plot(factor.times,prob);
+hold on;
+plot(factor.times,yield_chg);
+datetick('x','yyyy','keeplimits');
+hold off;
 
-%                                 
-% 
-% product = agg_jan_feb(times,data(:,1),false);
-% pmi = agg_jan_feb(times,data(:,2),false);
-% fai = agg_jan_feb(times,data(:,3),true);
-% consume = agg_jan_feb(times,data(:,4),false);
-% export = agg_jan_feb(times,data(:,5),false);
-% import = agg_jan_feb(times,data(:,6),false);
-% cpi = agg_jan_feb(times,data(:,7),false);
-% ppi = agg_jan_feb(times,data(:,8),false);
-% gdp = agg_jan_feb(times,data(:,9),true);
-% 
-% df = table(times_str,product,pmi,fai,consume,export,import,cpi,ppi,gdp);
-% 
-% jan = month(times)==1;
-% 
-% df = df(~jan,:); % 去掉1月
-% df = df(12:end,:);
-% t = times(~jan);
-% t = t(12:end);
-% 
-% df.pmi_mov = movmean(df.pmi,3);
-%                                 
-% recession = df.pmi_mov < 50.133;
-% expand = df.pmi_mov > 53;
-% expand(130:150) = true;
-% 
-% df1 = df(expand,[2,4:9]);
-% df2 = df(recession,[2,4:9]);
-% 
-% df1 = table2array(df1);
-% df2 = table2array(df2);
-% 
-% mu1 = mean(df1,1);
-% mu2 = mean(df2,1);
-% 
-% std1 = cov(df1);
-% std2 = cov(df2);
-% 
-% 
-% prob = nan(height(df),1);
-% for i=1:height(df)
-%     x = df(i,[2,4:9]);
-%     x = table2array(x);
-%     prob(i) = kkt(x,mu1,mu2,std1,std2);
-% end
