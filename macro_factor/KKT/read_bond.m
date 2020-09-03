@@ -33,8 +33,8 @@ cement_new = agg_jan_feb(times,data(:,3),true) * 100;
 steel = agg_jan_feb(times,data(:,4),true);
 ore = agg_jan_feb(times,data(:,5),true);
 multiplier = agg_jan_feb(times,data(:,6)./data(:,7),true); 
-dollar = data(:,8);
-coppergold = data(:,9)./data(:,10);
+dollar = agg_jan_feb(times,data(:,8),true);
+coppergold = agg_jan_feb(times,data(:,9)./data(:,10),true);
 yield = [NaN; data(2:end,11)-data(1:end-1,11)];
 
 cement = cement_old;
@@ -48,33 +48,53 @@ times = df.times; times_str = df.times_str;
 
 factor = df(15:end,[1:4,6:end]);
 
-bear = [9:18,31:39,49:53,79:85,117:127,155:157];
-bull = [26:30,40:45,60:63,86:107,130:141,150:154];
+idx_bear = [9:18,31:39,49:53,79:85,117:127,155:157];
+idx_bull = [26:30,40:45,60:63,86:107,130:141,150:154];
+bull = false(height(factor),1);
+bear = false(height(factor),1);
+bull(idx_bull) = true;
+bear(idx_bear) = true;
 
-df1 = factor(bull,3:8);
-df2 = factor(bear,3:8);
+% df1 = factor(bull,3:8);
+% df2 = factor(bear,3:8);
+% 
+% df1 = table2array(df1);
+% df2 = table2array(df2);
+% 
+% mu1 = mean(df1,1);
+% mu2 = mean(df2,1);
+% 
+% std1 = cov(df1);
+% std2 = cov(df2);
+% 
+% 
+% prob = nan(height(factor),1);
+% for i=1:height(factor)
+%     x = factor(i,3:8);
+%     x = table2array(x);
+%     prob(i) = kkt(x,mu1,mu2,std1,std2);
+% end
 
-df1 = table2array(df1);
-df2 = table2array(df2);
 
-mu1 = mean(df1,1);
-mu2 = mean(df2,1);
+test = table2array(factor(:,3:8));
+% test = test(2:end,:)-test(1:end-1,:);
+% test = [nan(1,size(test,2));test];
 
-std1 = cov(df1);
-std2 = cov(df2);
+prob_test = probability(test,test,bull,bear);
+prob_cv = cross_validation(bull,bear,test,10);
 
-
-prob = nan(height(factor),1);
-for i=1:height(factor)
-    x = factor(i,3:8);
-    x = table2array(x);
-    prob(i) = kkt(x,mu1,mu2,std1,std2);
-end
-
-yield_chg = [factor.yield(3:end);nan(2,1)];
-plot(factor.times,prob);
+plot(factor.times,prob_test);
 hold on;
-plot(factor.times,yield_chg);
+plot(factor.times,prob_cv);
+hold off;
+datetick('x','yyyy','keeplimits');
+
+plot(factor.times,factor.excavator);
+hold on;
+plot(factor.times,factor.cement);
+plot(factor.times,factor.ore*100);
+plot(factor.times,factor.multiplier*100);
+plot(factor.times,factor.dollar*100);
+plot(factor.times,factor.coppergold*100);
 datetick('x','yyyy','keeplimits');
 hold off;
-
