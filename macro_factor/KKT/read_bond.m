@@ -92,10 +92,11 @@ prob_cv = cross_validation(bull,bear,test,10);
 
 figure(2);
 plot(factor.times,prob_test);
+datetick('x','yyyy','keeplimits');
 hold on;
 plot(factor.times,prob_cv);
 hold off;
-datetick('x','yyyy','keeplimits');
+
 
 figure(3);
 plot(factor.times,factor.excavator);
