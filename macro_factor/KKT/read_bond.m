@@ -28,13 +28,14 @@ times_str = datestr(times,'yyyymmdd');
 times_str = mat2cell(times_str,ones(length(times_str),1),8);
 
 excavator = agg_jan_feb(times,data(:,1),false);
-cement_old = data(:,2) - 100; cement_old = agg_jan_feb(times,cement_old,false);% 水泥数据比较奇怪，是同比+100 
+cement_old = data(:,2) - 100; 
+cement_old = agg_jan_feb(times,cement_old,false);% 水泥数据比较奇怪，是同比+100 
 cement_new = agg_jan_feb(times,data(:,3),true) * 100;
 steel = agg_jan_feb(times,data(:,4),true) * 100;
 ore = agg_jan_feb(times,data(:,5),true) * 100;
 multiplier =  - agg_jan_feb(times,data(:,6)./data(:,7),true) * 100; 
 dollar = 100 - data(:,8);
-coppergold = data(:,9)./data(:,10) * 10;
+coppergold = data(:,9)./data(:,10);
 yield = [NaN; data(2:end,11)-data(1:end-1,11)];
 
 cement = cement_old;
@@ -47,11 +48,11 @@ df = df(~jan,:); % 去掉1月
 times = df.times; times_str = df.times_str;
 
 factor = df(:,[1:4,6:end]);
-factor.excavator = movmean(factor.excavator,6,'omitnan'); % 这个数不太平滑
-factor.cement = movmean(factor.cement,6,'omitnan');
-factor.ore = movmean(factor.ore,6,'omitnan');
-factor.multiplier = movmean(factor.multiplier,6,'omitnan');
-factor(2:end,3:end) = array2table(table2array(factor(2:end,3:end)) - table2array(factor(1:end-1,3:end)));
+factor.excavator = movmean(factor.excavator,[5 0],'omitnan'); % 这个数不太平滑
+factor.cement = movmean(factor.cement,[5 0],'omitnan');
+factor.ore = movmean(factor.ore,[5 0],'omitnan');
+factor.multiplier = movmean(factor.multiplier,[5 0],'omitnan');
+factor(2:end,3:4) = array2table(table2array(factor(2:end,3:4)) - table2array(factor(1:end-1,3:4)));
 factor = factor(15:end,:);
 
 

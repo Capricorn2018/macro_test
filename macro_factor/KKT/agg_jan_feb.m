@@ -11,7 +11,17 @@ function res = agg_jan_feb(times,data,chg)
             if(chg)
                 res(i+1) = nanmean(data(i:i+1));
             else
-                res(i+1) = 100 * (sqrt((1+max(data(i),0,'omitnan')/100)*(1+max(data(i+1),0,'omitnan')/100)) - 1);
+                if isnan(data(i))
+                    r0 = 0;
+                else
+                    r0 = data(i);
+                end
+                if isnan(data(i+1))
+                    r1 = 0;
+                else
+                    r1 = data(i+1);
+                end
+                res(i+1) = 100 * (sqrt((1+r0/100)*(1+r1/100)) - 1);
             end
         else
             if(mth(i)==1 && i==length(data))
