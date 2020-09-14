@@ -34,24 +34,30 @@ function [sprd21,sprd31,sprd32,times] =  otr_prem(start_dt,end_dt)
     subplot(3,2,1);
     plot_hist(sprd21);
     title('国开最新券次新券利差分布图');
+    axis tight
     subplot(3,2,2);
     plot(times,sprd21);    
     datetick('x','yyyymm','keeplimits');
     title('国开最新券次新券利差');
+    axis tight
     subplot(3,2,3);
     plot_hist(sprd31);
     title('国开最新券次次新券利差分布图');
+    axis tight
     subplot(3,2,4);
     plot(times,sprd31);
     datetick('x','yyyymm','keeplimits');
     title('国开最新券次次新券利差');
+    axis tight
     subplot(3,2,5);
     plot_hist(sprd32);
     title('国开次新券次次新券利差分布');
+    axis tight
     subplot(3,2,6);
     plot(times,sprd32);
     datetick('x','yyyymm','keeplimits');
     title('国开次新券次次新券利差');
+    axis tight;
     
     w.close;
     
