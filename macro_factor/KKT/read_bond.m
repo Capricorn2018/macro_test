@@ -34,8 +34,8 @@ cement_new = agg_jan_feb(times,data(:,3),true) * 100;
 steel = agg_jan_feb(times,data(:,4),true) * 100;
 ore = agg_jan_feb(times,data(:,5),true) * 100;
 multiplier =  - agg_jan_feb(times,data(:,6)./data(:,7),true) * 100; 
-dollar = 100 - data(:,8);
-coppergold = data(:,9)./data(:,10);
+dollar = agg_jan_feb(times,data(:,8),true) * 100;
+coppergold = agg_jan_feb(times,data(:,9)./data(:,10),true) * 100;
 yield = [NaN; data(2:end,11)-data(1:end-1,11)];
 
 cement = cement_old;
@@ -52,8 +52,12 @@ factor.excavator = movmean(factor.excavator,[5 0],'omitnan'); % 这个数不太平滑
 factor.cement = movmean(factor.cement,[5 0],'omitnan');
 factor.ore = movmean(factor.ore,[5 0],'omitnan');
 factor.multiplier = movmean(factor.multiplier,[5 0],'omitnan');
-factor(2:end,3:4) = array2table(table2array(factor(2:end,3:4)) - table2array(factor(1:end-1,3:4)));
-factor = factor(15:end,:);
+factor.coppergold = movmean(factor.coppergold,[5 0],'omitnan');
+%factor(2:end,3:end) = array2table(table2array(factor(2:end,3:end)) - table2array(factor(1:end-1,3:end)));
+factor = factor(15:end,[1:6,8:end]);
+
+%factor.dollar(2:end) = 100 * (factor.dollar(2:end) ./ factor.dollar(1:end-1) - 1);
+%factor.coppergold(2:end) = 100 * (factor.coppergold(2:end) ./ factor.coppergold(1:end-1) - 1);
 
 
 idx_bear = [9:18,31:39,49:53,79:85,117:127,155:157];
@@ -91,7 +95,7 @@ test = table2array(factor(:,3:8));
 prob_test = probability(test,test,bull,bear);
 prob_cv = cross_validation(bull,bear,test,10);
 
-figure(2);
+figure(3);
 plot(factor.times,prob_test);
 datetick('x','yyyy','keeplimits');
 hold on;
@@ -99,14 +103,13 @@ plot(factor.times,prob_cv);
 hold off;
 
 
-figure(3);
+figure(4);
 plot(factor.times,factor.excavator);
 hold on;
 plot(factor.times,factor.cement);
 plot(factor.times,factor.ore);
 plot(factor.times,factor.multiplier);
-plot(factor.times,factor.dollar);
 plot(factor.times,factor.coppergold);
 datetick('x','yyyy','keeplimits');
-legend('excavator','cement','ore','multiplier','dollar','coppergold');
+legend('excavator','cement','ore','multiplier','coppergold');
 hold off;
