@@ -1,7 +1,7 @@
 
 
 start_dt = '2005-01-01';
-end_dt = '2020-07-31';
+end_dt = '2020-08-31';
 
 w = windmatlab;
 
@@ -48,13 +48,18 @@ df = df(~jan,:); % 去掉1月
 times = df.times; times_str = df.times_str;
 
 factor = df(:,[1:4,6:end]);
-factor.excavator = movmean(factor.excavator,[5 0],'omitnan'); % 这个数不太平滑
-factor.cement = movmean(factor.cement,[5 0],'omitnan');
-factor.ore = movmean(factor.ore,[5 0],'omitnan');
-factor.multiplier = movmean(factor.multiplier,[5 0],'omitnan');
-factor.coppergold = movmean(factor.coppergold,[5 0],'omitnan');
-%factor(2:end,3:end) = array2table(table2array(factor(2:end,3:end)) - table2array(factor(1:end-1,3:end)));
-factor = factor(15:end,[1:6,8:end]);
+factor.excavator = hpfilter(factor.excavator,100);
+factor.cement = hpfilter(factor.excavator,100);
+factor.ore = hpfilter(factor.excavator,100);
+factor.multiplier = fillmissing(factor.multiplier,'nearest');
+factor.multiplier = hpfilter(factor.multiplier,100);
+factor.coppergold = fillmissing(factor.coppergold,'nearest');
+factor.coppergold = hpfilter(factor.coppergold,100);
+factor.dollar = fillmissing(factor.dollar,'nearest');
+factor.dollar = hpfilter(factor.dollar,100);
+factor(2:end,3:end) = array2table(table2array(factor(2:end,3:end)) - table2array(factor(1:end-1,3:end)));
+factor = factor(15:end,:);
+data = factor(:,[1:4,7:end]);
 
 %factor.dollar(2:end) = 100 * (factor.dollar(2:end) ./ factor.dollar(1:end-1) - 1);
 %factor.coppergold(2:end) = 100 * (factor.coppergold(2:end) ./ factor.coppergold(1:end-1) - 1);
@@ -62,8 +67,8 @@ factor = factor(15:end,[1:6,8:end]);
 
 idx_bear = [9:18,31:39,49:53,79:85,117:127,155:157];
 idx_bull = [26:30,40:45,60:63,86:107,130:141,150:154];
-bull = false(height(factor),1);
-bear = false(height(factor),1);
+bull = false(height(data),1);
+bear = false(height(data),1);
 bull(idx_bull) = true;
 bear(idx_bear) = true;
 
@@ -88,7 +93,7 @@ bear(idx_bear) = true;
 % end
 
 
-test = table2array(factor(:,3:8));
+test = table2array(data(:,3:end));
 % test = test(2:end,:)-test(1:end-1,:);
 % test = [nan(1,size(test,2));test];
 
@@ -110,6 +115,7 @@ plot(factor.times,factor.cement);
 plot(factor.times,factor.ore);
 plot(factor.times,factor.multiplier);
 plot(factor.times,factor.coppergold);
+plot(factor.times,-factor.dollar);
 datetick('x','yyyy','keeplimits');
-legend('excavator','cement','ore','multiplier','coppergold');
+legend('excavator','cement','ore','multiplier','coppergold','dollar');
 hold off;
