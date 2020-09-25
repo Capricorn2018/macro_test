@@ -7,7 +7,7 @@ function [factors,assets] = wind_data(filename,start_dt,end_dt)
                                                     'S0059749,M1004271,M1007675,S0059739,',...
                                                     'M1004267,M0048517,M0048504,M0048486'],start_dt,end_dt,'Fill=Previous'); 
     % 国开0~1,1~3,3~5,5~7,7~10,沪深300,中债高信用1~3
-    [wsd_data,~,~,wsd_times,~,~] = w.wsd('CBA02511.CS,CBA02521.CS,CBA02531.CS,CBA02541.CS,CBA02551.CS,399300.SZ,CBA01921.CS','close',start_dt,end_dt);
+    [wsd_data,~,~,wsd_times,~,~] = w.wsd('CBA02511.CS,CBA02521.CS,CBA02531.CS,CBA02541.CS,CBA02551.CS,399300.SZ,CBA01921.CS,NH0200.NHF','close',start_dt,end_dt);
     
     
     edb = array2table(edb_data,'VariableNames',edb_codes);
@@ -30,7 +30,7 @@ function [factors,assets] = wind_data(filename,start_dt,end_dt)
     factors.sprd51swap = edb.S0059747 - edb.M0048486; % 5年国债减FR007互换1Y
     factors.bondswap = edb.M0048486 - edb.S0059744; % swap1Y减去国债1y
     
-    names = {'date','CBA02511','CBA02521','CBA02531','CBA02541','CBA02551','HS300','CBA01921'};
+    names = {'date','CBA02511','CBA02521','CBA02531','CBA02541','CBA02551','HS300','CBA01921','NH0200'};
     assets = array2table([wsd_times,wsd_data],'VariableNames',names);
         
     save(filename,'assets','factors');

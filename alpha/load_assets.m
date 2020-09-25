@@ -1,4 +1,4 @@
-function [nav,ret] = load_assets(filename,reb)
+function [nav,ret] = load_assets(filename,filename_value,reb)
 
     %raw = readtable(filename);
     x = load(filename);
@@ -9,20 +9,30 @@ function [nav,ret] = load_assets(filename,reb)
 
     %reb = find_month_dates(num_days,raw.date,direction);
 
+    [d,v] = load_value(filename_value);
+    [~,Lia,Locb] = intersect(d,raw.date);
+    raw.value = nan(height(raw),1);
+    raw.value(Locb) = v(Lia);
+    if d(end)<raw.date(end)
+        disp('Error in load_assets.m: value file is not updated');
+    end
+    raw.value = fillmissing(raw.value,'previous');
+    %raw.value(isnan(raw.value)) = 1;
+    
     [~,Locb] = ismember(reb,raw.date);
     
     Locb = Locb(Locb>0); % 去掉不在raw.date里面的
-
     nav = raw(Locb,:);
-    ret = array2table(nan(size(nav)),'VariableNames',nav.Properties.VariableNames);
+    
+    ret = array2table(nan(size(nav)),'VariableNames',nav.Properties.VariableNames); 
     ret.date = nav.date;
     
     ret_lag3d = ret;
-    ret_lag3d.Properties.VariableNames = ['date',strcat(nav.Properties.VariableNames(2:end),'_lag3d')];
+    ret_lag3d.Properties.VariableNames = ['date',strcat(ret.Properties.VariableNames(2:end),'_lag3d')];
     ret_lag2d = ret_lag3d;
     ret_lag1d = ret_lag3d;
     ret_mean3d = ret_lag3d;
-    ret_mean3d.Properties.VariableNames = ['date',strcat(nav.Properties.VariableNames(2:end),'_mean3d')];
+    ret_mean3d.Properties.VariableNames = ['date',strcat(ret.Properties.VariableNames(2:end),'_mean3d')];
 
     for i = 1:length(reb)
 

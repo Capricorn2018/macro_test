@@ -1,12 +1,13 @@
 start_dt = '1990-01-01';
-end_dt = '2020-09-21';
+end_dt = '2020-09-24';
 file = 'D:/Projects/macro_test/data.mat';
+file_value = 'D:/Projects/macro_test/alpha/value.xlsx';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
 reb = get_dates(file,5,'last');
 
 reb(end) = datenum('2020-09-21'); % 这里一般用每个月倒数第五个交易日
-[~,ret] = load_assets(file,reb);
+[~,ret] = load_assets(file,file_value,reb);
 
 factor = load_factor(file,reb);
 tbl = merge_xy(factor, ret);
@@ -20,6 +21,9 @@ tbl.mom6m = [nan(5,1); movsum(tbl.mom1m,6,'Endpoints','discard')];
 
 tbl.stk1m = [NaN;tbl.HS300(1:end-1)];
 tbl.stk3m = [nan(2,1); movsum(tbl.stk1m,3,'Endpoints','discard')];
+
+tbl.value = [NaN;tbl.value(1:end-1)];
+tbl.comm = [NaN;tbl.NH0200(1:end-1)];
 
 tbl.curv135_3m = [nan(2,1);movmean(tbl.mean_curv135,3,'Endpoints','discard')];
 tbl.curv1510_3m = [nan(2,1);movmean(tbl.mean_curv1510,3,'Endpoints','discard')];
@@ -46,6 +50,8 @@ mom3m = tbl.mom3m;
 mom6m = tbl.mom6m;
 
 stk3m = tbl.stk3m;
+value = tbl.value;
+comm = tbl.comm;
 
 sprd31 = tbl.mean_sprd31;
 sprd51 = tbl.mean_sprd51;
@@ -78,6 +84,12 @@ r_long = tbl.CBA02551_lag3d;
 r_short = tbl.CBA02521_lag3d;
 r_mid = tbl.CBA02531_lag3d;
 r_money = tbl.CBA02511_lag3d;
+
+signal_value = value_signal(value,mom1m,0.004);
+[r_value,alpha_value] = long_short(r_long,r_short,signal_value);
+
+signal_comm = comm>0 & mom1m<-0.004;
+[r_comm,alpha_comm] = long_short(r_long,r_short,signal_comm);
 
 signal_sprd = roll_signal(sprd51,sprd51,40,0.5);
 [r_sprd,alpha_sprd] = long_short(r_long,r_short,signal_sprd);
@@ -197,7 +209,7 @@ r_sell3(signal_sell3==1) = r_money(signal_sell3==1);
 % end
 
 active = 0.6; % 主动长债仓位限制
-signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_sell2,signal_sell3);
+signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_sell2,signal_sell3,signal_value);
 signal.Properties.VariableNames{1} = 'times';
 position = (signal_found) .* active * 1/3 + (signal_prev) .* active * 1/3 + (signal_reverse) .* active * 1/3;
 r_all = r_sell .* (1-active) + r_found .* active * 1/3 + r_prev .* active * 1/3 + r_reverse .* active * 1/3 ;
