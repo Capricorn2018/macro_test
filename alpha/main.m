@@ -6,7 +6,7 @@ file_value = 'D:/Projects/macro_test/alpha/value.xlsx';
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2020-09-21'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2020-09-24'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,file_value,reb);
 
 factor = load_factor(file,reb);
@@ -85,10 +85,10 @@ r_short = tbl.CBA02521_lag3d;
 r_mid = tbl.CBA02531_lag3d;
 r_money = tbl.CBA02511_lag3d;
 
-signal_value = value_signal(value,mom1m,0.004);
+signal_value = value_signal(value,mom1m,0.004);%用0？？？？
 [r_value,alpha_value] = long_short(r_long,r_short,signal_value);
 
-signal_comm = comm>0 & mom1m<-0.004;
+signal_comm = -(comm>0 & mom1m<-0.002);
 [r_comm,alpha_comm] = long_short(r_long,r_short,signal_comm);
 
 signal_sprd = roll_signal(sprd51,sprd51,40,0.5);
@@ -166,7 +166,7 @@ signal_reverse = (signal_found==1) & (signal_mom6m==1); % 曲线+反转策略
 r_reverse(signal_reverse==1) = r_long(signal_reverse==1);
 
 r_prev = r_base;
-signal_prev = (signal_stk3m==1 & signal_mom==1); % 追涨策略
+signal_prev = (signal_stk3m==1 & mom1m>0.00); % 追涨策略
 r_prev(signal_prev==1) = r_long(signal_prev==1);
 
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
@@ -197,6 +197,15 @@ r_sell2(signal_sell2==1) = r_money(signal_sell2==1);
 r_sell3 = r_base;
 signal_sell3 = (signal_sell==1 & signal_swap==-1);
 r_sell3(signal_sell3==1) = r_money(signal_sell3==1);
+
+r_prev2 = r_base;
+signal_value = signal_value==1;
+r_prev2(signal_value==1) = r_long(signal_value==1);
+
+r_prev3 = r_base;
+signal_comm = signal_comm==-1;
+r_prev3(signal_comm==-1) = r_money(signal_comm==-1);
+
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
 % 用隐含税率作为赔率指标
