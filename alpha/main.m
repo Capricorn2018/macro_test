@@ -4,7 +4,7 @@ file = 'D:/Projects/macro_test/data.mat';
 file_value = 'D:/Projects/macro_test/alpha/value.xlsx';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
-reb = get_dates(file,5,'last');
+reb = get_dates(file,1,'last');
 
 reb(end) = datenum('2020-09-24'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,file_value,reb);
@@ -15,22 +15,22 @@ tbl = merge_xy(factor, ret);
 % 截取2005年以后的数
 tbl.mom1m = tbl.CBA02551 - tbl.CBA02521;
 tbl.mom1m = [NaN;tbl.mom1m(1:end-1)];
-tbl.mom2m = [NaN; movsum(tbl.mom1m,2,'Endpoints','discard')];
-tbl.mom3m = [nan(2,1); movsum(tbl.mom1m,3,'Endpoints','discard')];
-tbl.mom6m = [nan(5,1); movsum(tbl.mom1m,6,'Endpoints','discard')];
+tbl.mom2m = movsum(tbl.mom1m,[1 0]);
+tbl.mom3m = movsum(tbl.mom1m,[2 0]);
+tbl.mom6m = movsum(tbl.mom1m,[5 0]);
 
 tbl.stk1m = [NaN;tbl.HS300(1:end-1)];
-tbl.stk3m = [nan(2,1); movsum(tbl.stk1m,3,'Endpoints','discard')];
+tbl.stk3m = movsum(tbl.stk1m,[2 0]);
 
 tbl.value = [NaN;tbl.value(1:end-1)];
 tbl.comm = [NaN;tbl.NH0200(1:end-1)];
 
-tbl.curv135_3m = [nan(2,1);movmean(tbl.mean_curv135,3,'Endpoints','discard')];
-tbl.curv1510_3m = [nan(2,1);movmean(tbl.mean_curv1510,3,'Endpoints','discard')];
-tbl.sprd31_3m = [nan(2,1);movmean(tbl.mean_sprd31,3,'Endpoints','discard')];
-tbl.sprd51_3m = [nan(2,1);movmean(tbl.mean_sprd51,3,'Endpoints','discard')];
-tbl.sprdfin_3m = [nan(2,1);movmean(tbl.mean_sprdfin,3,'Endpoints','discard')];
-tbl.sprdliq_3m = [nan(2,1);movmean(tbl.mean_sprdliq,3,'Endpoints','discard')];
+tbl.curv135_3m = movmean(tbl.mean_curv135,[2 0]);
+tbl.curv1510_3m = movmean(tbl.mean_curv1510,[2 0]);
+tbl.sprd31_3m = movmean(tbl.mean_sprd31,[2 0]);
+tbl.sprd51_3m = movmean(tbl.mean_sprd51,[2 0]);
+tbl.sprdfin_3m = movmean(tbl.mean_sprdfin,[2 0]);
+tbl.sprdliq_3m = movmean(tbl.mean_sprdliq,[2 0]);
 
 tbl_orig = tbl;
 tbl = tbl(year(tbl.date)>=2005,:);
@@ -50,7 +50,7 @@ mom3m = tbl.mom3m;
 mom6m = tbl.mom6m;
 
 stk3m = tbl.stk3m;
-value = tbl.value;
+value = movmean(tbl.value,[2 0]);
 comm = tbl.comm;
 
 sprd31 = tbl.mean_sprd31;
@@ -85,7 +85,7 @@ r_short = tbl.CBA02521_lag3d;
 r_mid = tbl.CBA02531_lag3d;
 r_money = tbl.CBA02511_lag3d;
 
-signal_value = value_signal(value,mom1m,0.004);%用0？？？？
+signal_value = value<0 & mom1m>0.004;  %value_signal(value,mom1m,0.004);%用0？？？？
 [r_value,alpha_value] = long_short(r_long,r_short,signal_value);
 
 signal_comm = -(comm>0 & mom1m<-0.002);
@@ -218,7 +218,7 @@ r_prev3(signal_comm==-1) = r_money(signal_comm==-1);
 % end
 
 active = 0.6; % 主动长债仓位限制
-signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_sell2,signal_sell3,signal_value);
+signal = table(datestr(tbl.date,'yyyymmdd'),signal_found,signal_prev,signal_sell,signal_found2,signal_found3,signal_found4,signal_sell2,signal_sell3,signal_value,signal_comm);
 signal.Properties.VariableNames{1} = 'times';
 position = (signal_found) .* active * 1/3 + (signal_prev) .* active * 1/3 + (signal_reverse) .* active * 1/3;
 r_all = r_sell .* (1-active) + r_found .* active * 1/3 + r_prev .* active * 1/3 + r_reverse .* active * 1/3 ;
