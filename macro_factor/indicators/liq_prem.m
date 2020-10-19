@@ -1,4 +1,4 @@
-function liq = liq_prem(start_dt,end_dt)
+function [liq, rate] = liq_prem(start_dt,end_dt)
 % 读取短期限利率和IRS数据, 计算市场隐含流动性溢价
     w = windmatlab;
     
@@ -9,6 +9,8 @@ function liq = liq_prem(start_dt,end_dt)
                                     'M1004123,M1004126,M1004130,M1004084,M1001858'],...
                                     start_dt,end_dt);
                                             
+    rate = yield;                            
+                                
     shi3m_irs3m = yield(:,9) - yield(:,5); % 3m流动性溢价
     cd3m_irs3m = yield(:,1) - yield(:,5); % 3m存单减互换
     
