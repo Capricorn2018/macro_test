@@ -1,12 +1,12 @@
 start_dt = '1990-01-01';
-end_dt = '2020-10-16';
+end_dt = '2020-10-22';
 file = 'D:/Projects/macro_test/data.mat';
 file_value = 'D:/Projects/macro_test/alpha/value.xlsx';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
-reb = get_dates(file,1,'last');
+reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2020-10-16'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2020-10-22'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,file_value,reb);
 
 factor = load_factor(file,reb);

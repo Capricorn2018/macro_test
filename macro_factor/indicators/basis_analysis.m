@@ -1,5 +1,5 @@
 start_dt = '20130901';
-end_dt = '20201016';
+end_dt = '20201022';
 
 [basis,basis_time2mat,calender,dominant,dominant_basis,times,cont_list] = basis_prem(start_dt,end_dt);
 
@@ -21,7 +21,7 @@ mdl = fitlm([x1,x2],y);
 
 y_p = mdl.Fitted;
 
-figure(5);
+figure(10);
 plot(C,y);
 hold on;
 plot(C,y_p);
