@@ -40,7 +40,7 @@ function [liq, rate] = liq_prem(start_dt,end_dt)
     figure(3);
     subplot(2,2,1);
     plot_hist(shi3ms1y_irs1y);
-    title('SHIBOR3M1Y minus IRS1Y histogram');
+    title('Liquidity Premium');
     subplot(2,2,2);
     plot_hist(bond1y_irs1y);
     title('BOND1Y minus IRS1Y histogram');
