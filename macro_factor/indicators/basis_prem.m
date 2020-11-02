@@ -5,7 +5,7 @@ function [basis,basis_time2mat,calender,dominant,dominant_basis,times,cont_list]
     w = windmatlab;
 
     % 读取所有的T合约列表
-    [contracts,~,~,~,~,~] = w.wset('futurecc','wind_code=T.CFE');
+    [contracts,~,~,~,~,~] = w.wset('futurecc','wind_code=TF.CFE');
     
     % 合约列表中每个合约的起始和终止交易日
     frst_dt = datenum(contracts(:,7),'yyyy/mm/dd');
