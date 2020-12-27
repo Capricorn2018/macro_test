@@ -1,5 +1,5 @@
 start_dt = '20060101';
-end_dt = '20201218';
+end_dt = '20201225';
 
 credit = credit_prem(start_dt,end_dt);
 [liq, rate] = liq_prem(start_dt,end_dt);
