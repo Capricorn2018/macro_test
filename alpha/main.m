@@ -1,12 +1,12 @@
 start_dt = '1990-01-01';
-end_dt = '2020-11-24';
+end_dt = '2020-12-25';
 file = 'D:/Projects/macro_test/data.mat';
 file_value = 'D:/Projects/macro_test/alpha/value.xlsx';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2020-10-26'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2020-12-25'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,file_value,reb);
 
 factor = load_factor(file,reb);
@@ -85,10 +85,10 @@ r_short = tbl.CBA02521_lag3d;
 r_mid = tbl.CBA02531_lag3d;
 r_money = tbl.CBA02511_lag3d;
 
-signal_value = value<0 & mom1m>0.004;  %value_signal(value,mom1m,0.004);%用0？？？？
+signal_value = value<0 & mom1m>0;  %value_signal(value,mom1m,0.004);%用0？？？？
 [r_value,alpha_value] = long_short(r_long,r_short,signal_value);
 
-signal_comm = -(comm>0 & mom1m<-0.002);
+signal_comm = -(comm>0 & mom1m<0);
 [r_comm,alpha_comm] = long_short(r_long,r_short,signal_comm);
 
 signal_sprd = roll_signal(sprd51,sprd51,40,0.5);
@@ -154,7 +154,7 @@ r_base = r_short;
 
 % 看空时换短债
 r_sell = r_base;
-signal_sell = (signal_curv==-1 & signal_curv2==-1); % 为1时长债换仓成短债,或者从1~3换到货币
+signal_sell = (signal_curv==-1 & signal_curv_10d==-1 & signal_curv2==-1 & signal_curv2_10d==-1); % 为1时长债换仓成短债,或者从1~3换到货币
 r_sell(signal_sell==1) = r_money(signal_sell==1);
 
 r_found = r_base;
@@ -204,7 +204,7 @@ r_prev2(signal_value==1) = r_long(signal_value==1);
 
 r_prev3 = r_base;
 signal_comm = signal_comm==-1;
-r_prev3(signal_comm==-1) = r_money(signal_comm==-1);
+r_prev3(signal_comm==1) = r_money(signal_comm==1);
 
 %%%%%%%%%% 备选做多策略 %%%%%%%%%%
 
