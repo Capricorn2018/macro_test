@@ -16,8 +16,7 @@ function [curve,yield] = term_prem(start_dt,end_dt)
     bond5y = yield(:,3);
     bond7y = yield(:,4);
     bond10y = yield(:,5);
-    bond30y = yield(:,6);
-    
+    bond30y = yield(:,6);    
     cdb1y = yield(:,7);
     cdb3y = yield(:,8);
     cdb5y = yield(:,9);
