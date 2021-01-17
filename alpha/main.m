@@ -1,12 +1,12 @@
 start_dt = '1990-01-01';
-end_dt = '2021-01-08';
+end_dt = '2021-01-15';
 file = 'D:/Projects/macro_test/data.mat';
 file_value = 'D:/Projects/macro_test/alpha/value.xlsx';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2021-01-08'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2021-01-15'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,file_value,reb);
 
 factor = load_factor(file,reb);
@@ -121,6 +121,9 @@ signal_curv2 = roll_signal(curv135,curv135,40,0.5);
 signal_curv2_10d = roll_signal(curv135_10d,curv135,40,0.5);
 [r_curv2_10d,alpha_curv2_10d] = long_short(r_long,r_short,signal_curv);
 
+signal_curv3 = roll_signal(curv123,curv123,40,0.5);
+[r_curv3,alpha_curv3] = long_short(r_long,r_short,signal_curv3);
+
 signal_sprd3m = roll_signal(sprd51_3m,sprd51_3m,40,0.5);
 signal_curv3m = roll_signal(curv1510_3m,curv1510_3m,40,0.5);
 signal_fin3m = roll_signal(sprdfin_3m,sprdfin_3m,40,0.5);
@@ -178,7 +181,7 @@ r_found3 = r_base;  % 这个策略胜率在79%左右, AAA利差过高才做多
 signal_found3 = (signal_found==1 & signal_AAA==1); 
 r_found3(signal_found3==1) = r_long(signal_found3==1);
 
-r_found4 = r_base;  % 这个策略胜率在87.5%左右,swap1Y-bond1Y过高做多，不过信号少需要观察
+r_found4 = r_base;  % 这个策略胜率在87.5%左右,过高做多，不过信号少需要观察
 signal_found4 = (signal_found==1 & signal_swap==1); 
 r_found4(signal_found4==1) = r_long(signal_found4==1);
 
@@ -197,6 +200,10 @@ r_sell2(signal_sell2==1) = r_money(signal_sell2==1);
 r_sell3 = r_base;
 signal_sell3 = (signal_sell==1 & signal_swap==-1);
 r_sell3(signal_sell3==1) = r_money(signal_sell3==1);
+
+r_sell4 = r_base;
+signal_sell4 = signal_sell==-1 & signal_curv3==-1;
+r_sell4(signal_sell4==1) = r_money(signal_sell4==1);
 
 r_prev2 = r_base;
 signal_value = signal_value==1;
