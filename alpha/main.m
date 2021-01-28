@@ -1,12 +1,12 @@
 start_dt = '1990-01-01';
-end_dt = '2021-01-15';
+end_dt = '2021-01-25';
 file = 'D:/Projects/macro_test/data.mat';
 file_value = 'D:/Projects/macro_test/alpha/value.xlsx';
 [factors,assets] = wind_data(file,start_dt,end_dt);
 
 reb = get_dates(file,5,'last');
 
-reb(end) = datenum('2021-01-15'); % 这里一般用每个月倒数第五个交易日
+reb(end) = datenum('2021-01-25'); % 这里一般用每个月倒数第五个交易日
 [~,ret] = load_assets(file,file_value,reb);
 
 factor = load_factor(file,reb);
@@ -65,6 +65,7 @@ taxfin = tbl.mean_taxfin;
 % 利率互换是月度数据,避免数据偷看,用前一个月的数据
 sprdswap = [NaN;tbl.sprdswap(1:end-1)];
 
+curv123 = tbl.mean_curv123;
 curv135 = tbl.mean_curv135;
 curv1510 = tbl.mean_curv1510;
 

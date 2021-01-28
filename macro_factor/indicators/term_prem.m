@@ -1,4 +1,4 @@
-function [curve,yield] = term_prem(start_dt,end_dt)
+function  [curve,yield] = term_prem(start_dt,end_dt)
 % 读取短期限利率和IRS数据, 计算市场隐含流动性溢价
     w = windmatlab;
     
