@@ -3,7 +3,7 @@ function [sprd21,sprd31,sprd32,times] =  otr_prem(start_dt,end_dt)
     w = windmatlab;
     
     % 从otr_prem.xlsx中读入券表，发新券需要手动更新文件
-    [~,bond_list,~] = xlsread('inputs/otr_bond10y.xlsx','bond_list');
+    [~,bond_list,~] = xlsread('inputs/otr_cdb10y.xlsx','bond_list');
     %[~,bond_list,~] = xlsread('inputs/otr_30y.xlsx','bond_list');
     %[~,bond_list,~] = xlsread('inputs/otr_bond10y.xlsx','bond_list');
     bond_list = strjoin(bond_list,',');
