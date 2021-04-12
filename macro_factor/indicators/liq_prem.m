@@ -9,7 +9,9 @@ function [liq, rate] = liq_prem(start_dt,end_dt)
                                     'M1004123,M1004126,M1004130,M1004003,M1001858'],...
                                     start_dt,end_dt);
                                             
-    rate = yield;                            
+    rate = yield;
+    rate.Properties.VariableNames = {'同业存单AAA 3m', '国债1Y', '国开1Y', '同业存单AAA 1Y',...
+                                    'FR007互换3M', 'FR007互换1Y', 'FR007互换5Y', 'SHIBOR互换1Y', 'SHIBOR 3M'};
                                 
     shi3m_irs3m = yield(:,9) - yield(:,5); % 3m流动性溢价
     cd3m_irs3m = yield(:,1) - yield(:,5); % 3m存单减互换
