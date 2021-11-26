@@ -9,7 +9,8 @@ function [liq, rate] = liq_prem(start_dt,end_dt)
                                     'M1004123,M1004126,M1004130,M1004003,M1001858'],...
                                     start_dt,end_dt);
                                             
-    rate = yield;                            
+    rate = array2table(yield,'VariableNames',{'CD3m', 'Bond1Y', 'CDB1Y', 'CD1Y',...
+                                    'FR007S3M', 'FR007S1Y', 'FR007S5Y', 'SHIBORS1Y', 'SHIBOR3M'});
                                 
     shi3m_irs3m = yield(:,9) - yield(:,5); % 3m流动性溢价
     cd3m_irs3m = yield(:,1) - yield(:,5); % 3m存单减互换
